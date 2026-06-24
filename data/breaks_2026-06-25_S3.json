@@ -120,7 +120,8 @@
       "sydwasim"
     ],
     "s3_slot_9_45": [
-      "karthmkk"
+      "karthmkk",
+      "mssahith"
     ]
   },
   "bookingLog": [
@@ -567,6 +568,12 @@
       "slotLabel": "6:45 AM - 7:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:50:13 am"
+    },
+    {
+      "user": "mssahith",
+      "slotLabel": "9:45 AM - 10:00 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:51:39 am"
     }
   ]
 }
