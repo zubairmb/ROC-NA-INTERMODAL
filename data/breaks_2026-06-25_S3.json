@@ -111,7 +111,8 @@
     "s3_slot_6_0": [
       "lvlek",
       "srilav",
-      "kiranary"
+      "kiranary",
+      "brisharx"
     ],
     "s3_slot_7_45": [
       "shreetsn",
@@ -602,6 +603,12 @@
       "slotLabel": "8:15 AM - 8:30 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:52:53 am"
+    },
+    {
+      "user": "brisharx",
+      "slotLabel": "6:00 AM - 6:15 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:53:03 am"
     }
   ]
 }
