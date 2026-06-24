@@ -1,8 +1,15 @@
 {
-    "bookings":  {
-
-                 },
-    "bookingLog":  [
-
-                   ]
+  "bookings": {
+    "s1_slot_13_0": [
+      "surhaksh"
+    ]
+  },
+  "bookingLog": [
+    {
+      "user": "surhaksh",
+      "slotLabel": "1:00 PM - 1:15 PM",
+      "date": "2026-06-24",
+      "bookedAt": "24/6/2026, 4:03:33 pm"
+    }
+  ]
 }
