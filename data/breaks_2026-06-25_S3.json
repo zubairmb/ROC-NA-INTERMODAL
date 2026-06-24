@@ -75,7 +75,8 @@
     ],
     "s3_slot_9_30": [
       "deyhrish",
-      "tabisata"
+      "tabisata",
+      "ialejoji"
     ],
     "s3_slot_10_45": [
       "vpknr",
@@ -514,6 +515,12 @@
       "slotLabel": "6:30 AM - 6:45 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:47:21 am"
+    },
+    {
+      "user": "ialejoji",
+      "slotLabel": "9:30 AM - 9:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:47:24 am"
     }
   ]
 }
