@@ -41,7 +41,8 @@
     ],
     "s3_slot_11_0": [
       "manispil",
-      "vkatangu"
+      "vkatangu",
+      "snaram"
     ],
     "s3_slot_7_30": [
       "amoturi"
@@ -347,6 +348,12 @@
       "slotLabel": "8:15 AM - 8:30 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:39:16 am"
+    },
+    {
+      "user": "snaram",
+      "slotLabel": "11:00 AM - 11:15 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:39:24 am"
     }
   ]
 }
