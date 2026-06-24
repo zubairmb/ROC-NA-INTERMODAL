@@ -1,0 +1,15 @@
+{
+  "bookings": {
+    "s3_slot_11_45": [
+      "videvuno"
+    ]
+  },
+  "bookingLog": [
+    {
+      "user": "videvuno",
+      "slotLabel": "11:45 AM - 12:00 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:37:29 am"
+    }
+  ]
+}
