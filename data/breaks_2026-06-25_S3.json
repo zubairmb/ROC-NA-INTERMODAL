@@ -7,7 +7,8 @@
     ],
     "s3_slot_11_30": [
       "videvuno",
-      "manispil"
+      "manispil",
+      "vpknr"
     ],
     "s3_slot_7_15": [
       "amoturi",
@@ -239,6 +240,12 @@
       "slotLabel": "9:30 AM - 9:45 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:38:34 am"
+    },
+    {
+      "user": "vpknr",
+      "slotLabel": "11:30 AM - 11:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:38:38 am"
     }
   ]
 }
