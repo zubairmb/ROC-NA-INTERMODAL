@@ -47,7 +47,8 @@
     ],
     "s3_slot_7_30": [
       "amoturi",
-      "vkatangu"
+      "vkatangu",
+      "pviveksa"
     ],
     "s3_slot_8_15": [
       "lvlek",
@@ -440,6 +441,12 @@
       "slotLabel": "9:15 AM - 9:30 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:40:28 am"
+    },
+    {
+      "user": "pviveksa",
+      "slotLabel": "7:30 AM - 7:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:40:30 am"
     }
   ]
 }
