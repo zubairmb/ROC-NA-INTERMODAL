@@ -79,7 +79,8 @@
       "mahprate"
     ],
     "s3_slot_11_15": [
-      "vkatangu"
+      "vkatangu",
+      "snaram"
     ],
     "s3_slot_9_15": [
       "muhkmuja",
@@ -412,6 +413,12 @@
       "slotLabel": "11:00 AM - 11:15 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:40:19 am"
+    },
+    {
+      "user": "snaram",
+      "slotLabel": "11:15 AM - 11:30 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:40:21 am"
     }
   ]
 }
