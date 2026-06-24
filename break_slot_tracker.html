@@ -102,6 +102,12 @@
             <label>Enter your Login ID to get started</label><br>
             <input type="text" id="loginInput" placeholder="e.g. johndoe" onkeypress="if(event.key==='Enter')setLogin()">
             <button onclick="setLogin()">Continue</button>
+            <div id="tokenSetup" style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);display:none;">
+                <label style="font-size:12px;color:#a0aec0;">GitHub Token (one-time setup for shared sync)</label><br>
+                <input type="password" id="tokenInput" placeholder="Paste token here..." style="width:300px;margin-top:6px;">
+                <button onclick="saveToken()" style="margin-left:6px;padding:10px 16px;border-radius:8px;border:none;background:#38a169;color:#fff;font-size:13px;cursor:pointer;">Save Token</button>
+                <p style="font-size:11px;color:#4a5568;margin-top:6px;">Token is stored only in your browser. Never shared.</p>
+            </div>
         </div>
         <div id="mainContent" class="hidden">
             <div class="status-bar connected" id="statusBar">&#10003; Tracker active — ready to book</div>
@@ -187,9 +193,20 @@
     var ghSHA = {}; // track file SHA per shift for GitHub updates
 
     // ============ GITHUB CONFIG ============
-    var GH_TOKEN = "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";
+    var GH_TOKEN = ""; // loaded from localStorage
     var GH_REPO = "zubairmb/ROC-NA-INTERMODAL";
     var GH_API = "https://api.github.com/repos/" + GH_REPO + "/contents/data/";
+
+    function getGHToken() {
+        if (GH_TOKEN) return GH_TOKEN;
+        GH_TOKEN = sGet("gh_tracker_token") || "";
+        return GH_TOKEN;
+    }
+
+    function setGHToken(token) {
+        GH_TOKEN = token;
+        sSet("gh_tracker_token", token);
+    }
 
     function getGHFileName() { return "breaks_" + getTodayKey() + "_" + currentShift + ".json"; }
 
@@ -203,13 +220,16 @@
 
     // ============ GITHUB: FETCH BOOKINGS ============
     function fetchFromGitHub() {
+        var token = getGHToken();
+        if (!token) { loadFromLocal(); return Promise.resolve(); }
         var url = GH_API + getGHFileName();
         return fetch(url, {
-            headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json" },
+            headers: { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" },
             cache: "no-store"
         })
         .then(function(r) {
-            if (r.status === 404) return null; // file doesn't exist yet
+            if (r.status === 404) return null;
+            if (r.status === 401) { showToast("GitHub token invalid. Update in Settings.", true); return null; }
             if (!r.ok) throw new Error("HTTP " + r.status);
             return r.json();
         })
@@ -220,41 +240,36 @@
             var parsed = JSON.parse(content);
             bookings = parsed.bookings || {};
             bookingLog = parsed.bookingLog || [];
-            // Also save to localStorage as cache
             sSet(sKey(), JSON.stringify(bookings));
             sSet(lKey(), JSON.stringify(bookingLog));
         })
         .catch(function(err) {
-            console.warn("[Tracker] GitHub fetch failed, using local cache:", err.message);
+            console.warn("[Tracker] GitHub fetch failed:", err.message);
             loadFromLocal();
         });
     }
 
     // ============ GITHUB: PUSH BOOKINGS ============
     function pushToGitHub() {
+        var token = getGHToken();
+        if (!token) return Promise.resolve();
         var url = GH_API + getGHFileName();
         var content = btoa(unescape(encodeURIComponent(JSON.stringify({ bookings: bookings, bookingLog: bookingLog }, null, 2))));
-        var body = {
-            message: "Update " + getGHFileName() + " - " + new Date().toLocaleTimeString("en-IN"),
-            content: content
-        };
+        var body = { message: "Update " + getGHFileName(), content: content };
         if (ghSHA[currentShift]) body.sha = ghSHA[currentShift];
 
         return fetch(url, {
             method: "PUT",
-            headers: { "Authorization": "token " + GH_TOKEN, "Content-Type": "application/json" },
+            headers: { "Authorization": "token " + token, "Content-Type": "application/json" },
             body: JSON.stringify(body)
         })
         .then(function(r) {
             if (!r.ok) throw new Error("HTTP " + r.status);
             return r.json();
         })
-        .then(function(data) {
-            ghSHA[currentShift] = data.content.sha;
-        })
+        .then(function(data) { ghSHA[currentShift] = data.content.sha; })
         .catch(function(err) {
             console.warn("[Tracker] GitHub push failed:", err.message);
-            showToast("Saved locally (GitHub sync pending)", true);
         });
     }
 
@@ -320,17 +335,26 @@
     function switchTab(n){var tabs=document.querySelectorAll(".tab-content"),btns=document.querySelectorAll(".tab-btn");for(var i=0;i<tabs.length;i++)tabs[i].classList.remove("active");for(var i=0;i<btns.length;i++)btns[i].classList.remove("active");document.getElementById("tab-"+n).classList.add("active");if(n==="booking"){btns[0].classList.add("active");loadBookings();renderSlots();}else if(n==="manager"){btns[1].classList.add("active");loadBookings();renderManagerView();}else if(n==="history"){btns[2].classList.add("active");populateHistDates();renderHistory();}else if(n==="admin"){btns[3].classList.add("active");document.getElementById("adminShiftLabel").textContent=SHIFT_CONFIG[currentShift].name;}}
     function checkAdmin(){document.getElementById("adminTabBtn").style.display=(ADMIN_USERS.indexOf(currentUser)!==-1)?"":""+"none";}
     // ============ LOGIN ============
+    function saveToken() {
+        var t = document.getElementById("tokenInput").value.trim();
+        if (!t) { alert("Please paste the token."); return; }
+        setGHToken(t);
+        document.getElementById("tokenSetup").style.display = "none";
+        showToast("Token saved! Shared sync enabled.");
+    }
+
     function setLogin() {
         var val = document.getElementById("loginInput").value.trim().toLowerCase();
         if (!val) { alert("Please enter your login ID"); return; }
+        if (!getGHToken()) { showToast("Please set up the GitHub token first.", true); document.getElementById("tokenSetup").style.display="block"; return; }
         currentUser = val;
         sSet("break_current_user", currentUser);
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("mainContent").classList.remove("hidden");
-        document.getElementById("statusBar").innerHTML = '<span class="spinner"></span> Syncing with server...';
+        document.getElementById("statusBar").innerHTML = '<span class="spinner"></span> Syncing...';
+        document.getElementById("statusBar").className = "status-bar connected";
         checkAdmin();
         fetchFromGitHub().then(function() {
-            document.getElementById("statusBar").className = "status-bar connected";
             document.getElementById("statusBar").innerHTML = "&#10003; Connected — live sync every 5s";
             renderSlots();
             startAutoRefresh();
@@ -414,8 +438,12 @@
 
     // ============ INIT ============
     (function() {
+        // Show token setup if not saved
+        if (!sGet("gh_tracker_token")) {
+            document.getElementById("tokenSetup").style.display = "block";
+        }
         var saved = sGet("break_current_user");
-        if (saved) {
+        if (saved && getGHToken()) {
             currentUser = saved;
             document.getElementById("loginSection").style.display="none";
             document.getElementById("mainContent").classList.remove("hidden");
@@ -423,7 +451,7 @@
             startAutoRefresh();
         }
         selectShift("S1");
-        if (currentUser) {
+        if (currentUser && getGHToken()) {
             fetchFromGitHub().then(function() {
                 document.getElementById("statusBar").className = "status-bar connected";
                 document.getElementById("statusBar").innerHTML = "&#10003; Connected — live sync every 5s";
