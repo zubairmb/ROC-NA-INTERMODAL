@@ -2,7 +2,8 @@
   "bookings": {
     "s3_slot_11_45": [
       "videvuno",
-      "manispil"
+      "manispil",
+      "mahprate"
     ],
     "s3_slot_11_30": [
       "videvuno",
@@ -131,6 +132,12 @@
       "slotLabel": "7:30 AM - 7:45 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:37:58 am"
+    },
+    {
+      "user": "mahprate",
+      "slotLabel": "11:45 AM - 12:00 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:38:00 am"
     }
   ]
 }
