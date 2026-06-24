@@ -108,7 +108,8 @@
     "s3_slot_6_45": [
       "snaram",
       "ialejoji",
-      "karthmkk"
+      "karthmkk",
+      "nandhaan"
     ],
     "s3_slot_6_0": [
       "lvlek",
@@ -685,6 +686,12 @@
       "slotLabel": "9:45 AM - 10:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 5:03:21 am"
+    },
+    {
+      "user": "nandhaan",
+      "slotLabel": "6:45 AM - 7:00 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 5:03:31 am"
     }
   ]
 }
