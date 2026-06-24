@@ -23,6 +23,9 @@
     ],
     "s3_slot_10_0": [
       "vinakw"
+    ],
+    "s3_slot_6_15": [
+      "sabayesh"
     ]
   },
   "bookingLog": [
@@ -73,6 +76,12 @@
       "slotLabel": "10:00 AM - 10:15 AM",
       "date": "2026-06-24",
       "bookedAt": "24/6/2026, 4:08:15 pm"
+    },
+    {
+      "user": "sabayesh",
+      "slotLabel": "6:15 AM - 6:30 AM",
+      "date": "2026-06-24",
+      "bookedAt": "24/6/2026, 4:22:22 pm"
     }
   ]
 }
