@@ -68,7 +68,8 @@
     "s3_slot_10_30": [
       "manispil",
       "srilav",
-      "lvlek"
+      "lvlek",
+      "pviveksa"
     ],
     "s3_slot_9_30": [
       "deyhrish"
@@ -447,6 +448,12 @@
       "slotLabel": "7:30 AM - 7:45 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:40:30 am"
+    },
+    {
+      "user": "pviveksa",
+      "slotLabel": "10:30 AM - 10:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:40:37 am"
     }
   ]
 }
