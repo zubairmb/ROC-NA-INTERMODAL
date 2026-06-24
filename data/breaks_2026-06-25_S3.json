@@ -131,7 +131,8 @@
       "srchandu"
     ],
     "s3_slot_8_30": [
-      "brisharx"
+      "brisharx",
+      "srchandu"
     ],
     "s3_slot_6_15": [
       "pgotakh"
@@ -650,6 +651,12 @@
       "slotLabel": "9:45 AM - 10:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 5:01:23 am"
+    },
+    {
+      "user": "srchandu",
+      "slotLabel": "8:30 AM - 8:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 5:01:55 am"
     }
   ]
 }
