@@ -84,6 +84,9 @@
     ],
     "s3_slot_6_45": [
       "snaram"
+    ],
+    "s3_slot_6_0": [
+      "lvlek"
     ]
   },
   "bookingLog": [
@@ -368,6 +371,12 @@
       "slotLabel": "9:00 AM - 9:15 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:39:33 am"
+    },
+    {
+      "user": "lvlek",
+      "slotLabel": "6:00 AM - 6:15 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:39:39 am"
     }
   ]
 }
