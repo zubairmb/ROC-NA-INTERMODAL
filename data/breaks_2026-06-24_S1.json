@@ -5,6 +5,9 @@
     ],
     "s1_slot_15_45": [
       "surhaksh"
+    ],
+    "s1_slot_16_0": [
+      "surhaksh"
     ]
   },
   "bookingLog": [
@@ -19,6 +22,12 @@
       "slotLabel": "3:45 PM - 4:00 PM",
       "date": "2026-06-24",
       "bookedAt": "24/6/2026, 4:03:35 pm"
+    },
+    {
+      "user": "surhaksh",
+      "slotLabel": "4:00 PM - 4:15 PM",
+      "date": "2026-06-24",
+      "bookedAt": "24/6/2026, 4:03:36 pm"
     }
   ]
 }
