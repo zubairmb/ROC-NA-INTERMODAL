@@ -107,6 +107,9 @@
     ],
     "s3_slot_7_45": [
       "shreetsn"
+    ],
+    "s3_slot_6_30": [
+      "ialejoji"
     ]
   },
   "bookingLog": [
@@ -505,6 +508,12 @@
       "slotLabel": "6:45 AM - 7:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:47:19 am"
+    },
+    {
+      "user": "ialejoji",
+      "slotLabel": "6:30 AM - 6:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:47:21 am"
     }
   ]
 }
