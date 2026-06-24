@@ -2,6 +2,9 @@
   "bookings": {
     "s3_slot_5_15": [
       "zubairmb"
+    ],
+    "s3_slot_7_0": [
+      "zubairmb"
     ]
   },
   "bookingLog": [
@@ -10,6 +13,12 @@
       "slotLabel": "5:15 AM - 5:30 AM",
       "date": "2026-06-24",
       "bookedAt": "24/6/2026, 4:01:12 pm"
+    },
+    {
+      "user": "zubairmb",
+      "slotLabel": "7:00 AM - 7:15 AM",
+      "date": "2026-06-24",
+      "bookedAt": "24/6/2026, 4:01:15 pm"
     }
   ]
 }
