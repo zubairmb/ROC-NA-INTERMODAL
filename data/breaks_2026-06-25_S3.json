@@ -40,7 +40,8 @@
       "bargavik"
     ],
     "s3_slot_11_0": [
-      "manispil"
+      "manispil",
+      "vkatangu"
     ],
     "s3_slot_7_30": [
       "amoturi"
@@ -292,6 +293,12 @@
       "slotLabel": "5:45 AM - 6:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:38:57 am"
+    },
+    {
+      "user": "vkatangu",
+      "slotLabel": "11:00 AM - 11:15 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:39:00 am"
     }
   ]
 }
