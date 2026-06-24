@@ -55,7 +55,8 @@
     "s3_slot_8_15": [
       "lvlek",
       "srilav",
-      "mssahith"
+      "mssahith",
+      "karthmkk"
     ],
     "s3_slot_8_0": [
       "lvlek",
@@ -595,6 +596,12 @@
       "slotLabel": "7:45 AM - 8:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:52:02 am"
+    },
+    {
+      "user": "karthmkk",
+      "slotLabel": "8:15 AM - 8:30 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:52:53 am"
     }
   ]
 }
