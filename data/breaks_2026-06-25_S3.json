@@ -98,7 +98,8 @@
       "tabisata"
     ],
     "s3_slot_6_45": [
-      "snaram"
+      "snaram",
+      "ialejoji"
     ],
     "s3_slot_6_0": [
       "lvlek",
@@ -498,6 +499,12 @@
       "slotLabel": "8:00 AM - 8:15 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:41:33 am"
+    },
+    {
+      "user": "ialejoji",
+      "slotLabel": "6:45 AM - 7:00 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:47:19 am"
     }
   ]
 }
