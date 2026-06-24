@@ -20,6 +20,9 @@
     ],
     "s3_slot_7_30": [
       "vinakw"
+    ],
+    "s3_slot_10_0": [
+      "vinakw"
     ]
   },
   "bookingLog": [
@@ -64,6 +67,12 @@
       "slotLabel": "7:30 AM - 7:45 AM",
       "date": "2026-06-24",
       "bookedAt": "24/6/2026, 4:08:08 pm"
+    },
+    {
+      "user": "vinakw",
+      "slotLabel": "10:00 AM - 10:15 AM",
+      "date": "2026-06-24",
+      "bookedAt": "24/6/2026, 4:08:15 pm"
     }
   ]
 }
