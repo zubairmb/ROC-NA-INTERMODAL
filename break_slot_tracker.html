@@ -184,6 +184,14 @@
     var currentShift = "S1", SLOTS = [], currentUser = "", bookings = {}, bookingLog = [], refreshInterval = null;
     var ADMIN_USERS = ["zubairmb"];
     var MAX_BOOKINGS_PER_USER = 4;
+    var ghSHA = {}; // track file SHA per shift for GitHub updates
+
+    // ============ GITHUB CONFIG ============
+    var GH_TOKEN = "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";
+    var GH_REPO = "zubairmb/ROC-NA-INTERMODAL";
+    var GH_API = "https://api.github.com/repos/" + GH_REPO + "/contents/data/";
+
+    function getGHFileName() { return "breaks_" + getTodayKey() + "_" + currentShift + ".json"; }
 
     function fmt(h, m) { var p = h >= 12 ? "PM" : "AM"; var d = h > 12 ? h-12 : h; if(d===0)d=12; return d+":"+(m<10?"0":"")+m+" "+p; }
     function getMax(slot) { return slot.capacity || 4; }
@@ -192,37 +200,108 @@
     function lKey() { return "breaklog_"+currentShift+"_"+getTodayKey(); }
     function sGet(k) { try{return localStorage.getItem(k);}catch(e){return null;} }
     function sSet(k,v) { try{localStorage.setItem(k,v);}catch(e){} }
-    // ============ LOAD / SAVE ============
-    function loadBookings() {
+
+    // ============ GITHUB: FETCH BOOKINGS ============
+    function fetchFromGitHub() {
+        var url = GH_API + getGHFileName();
+        return fetch(url, {
+            headers: { "Authorization": "token " + GH_TOKEN, "Accept": "application/vnd.github.v3+json" },
+            cache: "no-store"
+        })
+        .then(function(r) {
+            if (r.status === 404) return null; // file doesn't exist yet
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+        })
+        .then(function(data) {
+            if (!data) return;
+            ghSHA[currentShift] = data.sha;
+            var content = atob(data.content.replace(/\n/g, ""));
+            var parsed = JSON.parse(content);
+            bookings = parsed.bookings || {};
+            bookingLog = parsed.bookingLog || [];
+            // Also save to localStorage as cache
+            sSet(sKey(), JSON.stringify(bookings));
+            sSet(lKey(), JSON.stringify(bookingLog));
+        })
+        .catch(function(err) {
+            console.warn("[Tracker] GitHub fetch failed, using local cache:", err.message);
+            loadFromLocal();
+        });
+    }
+
+    // ============ GITHUB: PUSH BOOKINGS ============
+    function pushToGitHub() {
+        var url = GH_API + getGHFileName();
+        var content = btoa(unescape(encodeURIComponent(JSON.stringify({ bookings: bookings, bookingLog: bookingLog }, null, 2))));
+        var body = {
+            message: "Update " + getGHFileName() + " - " + new Date().toLocaleTimeString("en-IN"),
+            content: content
+        };
+        if (ghSHA[currentShift]) body.sha = ghSHA[currentShift];
+
+        return fetch(url, {
+            method: "PUT",
+            headers: { "Authorization": "token " + GH_TOKEN, "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        })
+        .then(function(r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+        })
+        .then(function(data) {
+            ghSHA[currentShift] = data.content.sha;
+        })
+        .catch(function(err) {
+            console.warn("[Tracker] GitHub push failed:", err.message);
+            showToast("Saved locally (GitHub sync pending)", true);
+        });
+    }
+
+    // ============ LOCAL FALLBACK ============
+    function loadFromLocal() {
         var s = sGet(sKey()); bookings = s ? JSON.parse(s) : {};
         var l = sGet(lKey()); bookingLog = l ? JSON.parse(l) : [];
-        // Rebuild bookings from log if bookings empty but log has entries
-        if (Object.keys(bookings).length === 0 && bookingLog.length > 0) {
-            for (var i = 0; i < bookingLog.length; i++) {
-                for (var j = 0; j < SLOTS.length; j++) {
-                    if (SLOTS[j].label === bookingLog[i].slotLabel) {
-                        var sid = SLOTS[j].id;
-                        if (!bookings[sid]) bookings[sid] = [];
-                        if (bookings[sid].indexOf(bookingLog[i].user) === -1) bookings[sid].push(bookingLog[i].user);
-                        break;
-                    }
-                }
-            }
-            sSet(sKey(), JSON.stringify(bookings));
-        }
     }
-    function saveBookings() { sSet(sKey(), JSON.stringify(bookings)); sSet(lKey(), JSON.stringify(bookingLog)); saveHistIdx(getTodayKey()); }
+
+    // ============ LOAD / SAVE ============
+    function loadBookings() {
+        // Try GitHub first, fall back to local
+        return fetchFromGitHub();
+    }
+
+    function loadBookingsSync() {
+        // Synchronous local load for immediate rendering
+        loadFromLocal();
+    }
+
+    function saveBookings() {
+        sSet(sKey(), JSON.stringify(bookings));
+        sSet(lKey(), JSON.stringify(bookingLog));
+        saveHistIdx(getTodayKey());
+        // Push to GitHub in background
+        pushToGitHub();
+    }
 
     // ============ HISTORY ============
     function getHistIdx() { var r=sGet("bhi_"+currentShift); return r?JSON.parse(r):[]; }
     function saveHistIdx(d) { var idx=getHistIdx(); if(idx.indexOf(d)===-1){idx.push(d);idx.sort().reverse();sSet("bhi_"+currentShift,JSON.stringify(idx));} }
     function getHistLog(d) { var r=sGet("breaklog_"+currentShift+"_"+d); return r?JSON.parse(r):[]; }
 
-    // ============ CROSS-TAB SYNC ============
+    // ============ CROSS-TAB SYNC + GITHUB POLLING ============
     window.addEventListener("storage", function(e) {
-        if (e.key === sKey() || e.key === lKey()) { loadBookings(); renderSlots(); }
+        if (e.key === sKey() || e.key === lKey()) { loadFromLocal(); renderSlots(); }
     });
-    function startAutoRefresh() { if(refreshInterval)clearInterval(refreshInterval); refreshInterval=setInterval(function(){if(!currentUser)return;loadBookings();renderSlots();},2000); }
+    function startAutoRefresh() {
+        if(refreshInterval) clearInterval(refreshInterval);
+        refreshInterval = setInterval(function() {
+            if (!currentUser) return;
+            fetchFromGitHub().then(function() {
+                renderSlots();
+                if (document.getElementById("tab-manager").classList.contains("active")) renderManagerView();
+            });
+        }, 5000); // Poll GitHub every 5 seconds
+    }
 
     // ============ SHIFT SELECTION ============
     function selectShift(shift) {
@@ -232,8 +311,8 @@
         if(shift==="S1")btns[0].classList.add("active"); else btns[1].classList.add("active");
         var cfg = SHIFT_CONFIG[shift];
         document.getElementById("shiftInfoBar").innerHTML = '<div class="shift-badge">Slots: <span>'+cfg.slotsLabel+'</span></div><div class="shift-badge">Duration: <span>'+cfg.duration+'</span></div><div class="shift-badge">Max/Slot: <span>'+(shift==="S1"?"8 (1-2PM) / 5 (rest)":"4 associates")+'</span></div>';
-        loadBookings();
-        if(currentUser) renderSlots();
+        loadFromLocal(); // show local cache immediately
+        if(currentUser) { renderSlots(); fetchFromGitHub().then(function(){ renderSlots(); }); }
     }
 
     // ============ UI ============
@@ -248,7 +327,14 @@
         sSet("break_current_user", currentUser);
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("mainContent").classList.remove("hidden");
-        checkAdmin(); loadBookings(); renderSlots(); startAutoRefresh();
+        document.getElementById("statusBar").innerHTML = '<span class="spinner"></span> Syncing with server...';
+        checkAdmin();
+        fetchFromGitHub().then(function() {
+            document.getElementById("statusBar").className = "status-bar connected";
+            document.getElementById("statusBar").innerHTML = "&#10003; Connected — live sync every 5s";
+            renderSlots();
+            startAutoRefresh();
+        });
     }
 
     // ============ RENDER SLOTS ============
@@ -297,20 +383,24 @@
     });
 
     function bookSlot(slotId, slotLabel, maxCap, btn) {
-        loadBookings(); // fresh read before write
-        // Check user limit (max 4 per day)
-        var userCount = 0;
-        for (var k in bookings) if (bookings.hasOwnProperty(k)) for (var u=0;u<bookings[k].length;u++) if(bookings[k][u]===currentUser) userCount++;
-        if (userCount >= MAX_BOOKINGS_PER_USER) { showToast("Maximum "+MAX_BOOKINGS_PER_USER+" breaks per day reached.", true); return; }
-        if (!bookings[slotId]) bookings[slotId] = [];
-        if (bookings[slotId].length >= maxCap) { showToast("Slot is full!", true); renderSlots(); return; }
-        if (bookings[slotId].indexOf(currentUser) !== -1) { showToast("Already booked this slot.", true); return; }
         btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Booking...';
-        bookings[slotId].push(currentUser);
-        bookingLog.push({ user: currentUser, slotLabel: slotLabel, date: getTodayKey(), bookedAt: new Date().toLocaleString("en-IN") });
-        saveBookings();
-        showToast("\u2713 Booked: " + slotLabel + " (" + (userCount+1) + "/" + MAX_BOOKINGS_PER_USER + " used)");
-        renderSlots();
+
+        // Fetch latest from GitHub before writing (prevent conflicts)
+        fetchFromGitHub().then(function() {
+            // Check user limit (max 4 per day)
+            var userCount = 0;
+            for (var k in bookings) if (bookings.hasOwnProperty(k)) for (var u=0;u<bookings[k].length;u++) if(bookings[k][u]===currentUser) userCount++;
+            if (userCount >= MAX_BOOKINGS_PER_USER) { showToast("Maximum "+MAX_BOOKINGS_PER_USER+" breaks per day reached.", true); renderSlots(); return; }
+            if (!bookings[slotId]) bookings[slotId] = [];
+            if (bookings[slotId].length >= maxCap) { showToast("Slot is full!", true); renderSlots(); return; }
+            if (bookings[slotId].indexOf(currentUser) !== -1) { showToast("Already booked this slot.", true); renderSlots(); return; }
+
+            bookings[slotId].push(currentUser);
+            bookingLog.push({ user: currentUser, slotLabel: slotLabel, date: getTodayKey(), bookedAt: new Date().toLocaleString("en-IN") });
+            saveBookings();
+            showToast("\u2713 Booked: " + slotLabel + " (" + (userCount+1) + "/" + MAX_BOOKINGS_PER_USER + " used)");
+            renderSlots();
+        });
     }
 
     // ============ ADMIN RESET ============
@@ -325,9 +415,21 @@
     // ============ INIT ============
     (function() {
         var saved = sGet("break_current_user");
-        if (saved) { currentUser = saved; document.getElementById("loginSection").style.display="none"; document.getElementById("mainContent").classList.remove("hidden"); checkAdmin(); startAutoRefresh(); }
+        if (saved) {
+            currentUser = saved;
+            document.getElementById("loginSection").style.display="none";
+            document.getElementById("mainContent").classList.remove("hidden");
+            checkAdmin();
+            startAutoRefresh();
+        }
         selectShift("S1");
-        if (currentUser) { loadBookings(); renderSlots(); }
+        if (currentUser) {
+            fetchFromGitHub().then(function() {
+                document.getElementById("statusBar").className = "status-bar connected";
+                document.getElementById("statusBar").innerHTML = "&#10003; Connected — live sync every 5s";
+                renderSlots();
+            });
+        }
     })();
     </script>
 </body>
