@@ -58,7 +58,8 @@
     ],
     "s3_slot_9_0": [
       "muhkmuja",
-      "videvuno"
+      "videvuno",
+      "vkatangu"
     ],
     "s3_slot_10_30": [
       "manispil",
@@ -361,6 +362,12 @@
       "slotLabel": "9:15 AM - 9:30 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:39:31 am"
+    },
+    {
+      "user": "vkatangu",
+      "slotLabel": "9:00 AM - 9:15 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:39:33 am"
     }
   ]
 }
