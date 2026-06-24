@@ -19,7 +19,8 @@
       "bargavik"
     ],
     "s3_slot_8_45": [
-      "mahprate"
+      "mahprate",
+      "mssahith"
     ],
     "s3_slot_10_0": [
       "bargavik",
@@ -574,6 +575,12 @@
       "slotLabel": "9:45 AM - 10:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:51:39 am"
+    },
+    {
+      "user": "mssahith",
+      "slotLabel": "8:45 AM - 9:00 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:51:47 am"
     }
   ]
 }
