@@ -1,4 +1,15 @@
 {
-  "bookings": {},
-  "bookingLog": []
+  "bookings": {
+    "s3_slot_5_15": [
+      "zubairmb"
+    ]
+  },
+  "bookingLog": [
+    {
+      "user": "zubairmb",
+      "slotLabel": "5:15 AM - 5:30 AM",
+      "date": "2026-06-24",
+      "bookedAt": "24/6/2026, 4:01:12 pm"
+    }
+  ]
 }
