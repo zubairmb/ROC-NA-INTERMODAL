@@ -65,6 +65,9 @@
     ],
     "s3_slot_10_45": [
       "vpknr"
+    ],
+    "s3_slot_5_45": [
+      "mahprate"
     ]
   },
   "bookingLog": [
@@ -283,6 +286,12 @@
       "slotLabel": "10:45 AM - 11:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:38:53 am"
+    },
+    {
+      "user": "mahprate",
+      "slotLabel": "5:45 AM - 6:00 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:38:57 am"
     }
   ]
 }
