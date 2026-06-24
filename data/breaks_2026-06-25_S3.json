@@ -14,7 +14,8 @@
     ],
     "s3_slot_10_0": [
       "bargavik",
-      "amoturi"
+      "amoturi",
+      "shreetsn"
     ],
     "s3_slot_7_0": [
       "msprabha"
@@ -71,6 +72,12 @@
       "slotLabel": "10:15 AM - 10:30 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:37:43 am"
+    },
+    {
+      "user": "shreetsn",
+      "slotLabel": "10:00 AM - 10:15 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:37:44 am"
     }
   ]
 }
