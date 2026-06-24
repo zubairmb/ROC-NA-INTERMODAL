@@ -81,7 +81,8 @@
     "s3_slot_10_45": [
       "vpknr",
       "muhkmuja",
-      "kuruvapr"
+      "kuruvapr",
+      "ialejoji"
     ],
     "s3_slot_5_45": [
       "mahprate"
@@ -521,6 +522,12 @@
       "slotLabel": "9:30 AM - 9:45 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:47:24 am"
+    },
+    {
+      "user": "ialejoji",
+      "slotLabel": "10:45 AM - 11:00 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:47:27 am"
     }
   ]
 }
