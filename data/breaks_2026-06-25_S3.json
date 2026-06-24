@@ -143,7 +143,8 @@
     ],
     "s3_slot_6_15": [
       "pgotakh",
-      "wmkiran"
+      "wmkiran",
+      "megnaid"
     ],
     "s3_slot_5_15": [
       "srchandu"
@@ -713,6 +714,12 @@
       "slotLabel": "7:45 AM - 8:00 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 5:04:51 am"
+    },
+    {
+      "user": "megnaid",
+      "slotLabel": "6:15 AM - 6:30 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 5:04:57 am"
     }
   ]
 }
