@@ -127,6 +127,9 @@
     "s3_slot_9_45": [
       "karthmkk",
       "mssahith"
+    ],
+    "s3_slot_8_30": [
+      "brisharx"
     ]
   },
   "bookingLog": [
@@ -609,6 +612,12 @@
       "slotLabel": "6:00 AM - 6:15 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:53:03 am"
+    },
+    {
+      "user": "brisharx",
+      "slotLabel": "8:30 AM - 8:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:53:25 am"
     }
   ]
 }
