@@ -87,7 +87,8 @@
     "s3_slot_9_15": [
       "muhkmuja",
       "kuruvapr",
-      "snaram"
+      "snaram",
+      "tabisata"
     ],
     "s3_slot_6_45": [
       "snaram"
@@ -433,6 +434,12 @@
       "slotLabel": "11:15 AM - 11:30 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 4:40:25 am"
+    },
+    {
+      "user": "tabisata",
+      "slotLabel": "9:15 AM - 9:30 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 4:40:28 am"
     }
   ]
 }
