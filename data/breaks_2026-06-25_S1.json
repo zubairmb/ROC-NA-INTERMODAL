@@ -13,6 +13,9 @@
     ],
     "s1_slot_18_45": [
       "mehaseeb"
+    ],
+    "s1_slot_13_45": [
+      "chaakast"
     ]
   },
   "bookingLog": [
@@ -51,6 +54,12 @@
       "slotLabel": "8:00 PM - 8:15 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:22:30 pm"
+    },
+    {
+      "user": "chaakast",
+      "slotLabel": "1:45 PM - 2:00 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:22:33 pm"
     }
   ]
 }
