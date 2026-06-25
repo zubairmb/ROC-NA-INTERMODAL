@@ -125,7 +125,8 @@
     ],
     "s3_slot_6_30": [
       "ialejoji",
-      "megnaid"
+      "megnaid",
+      "sivateko"
     ],
     "s3_slot_5_30": [
       "sydwasim"
@@ -734,6 +735,12 @@
       "slotLabel": "6:15 AM - 6:30 AM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 5:17:20 am"
+    },
+    {
+      "user": "sivateko",
+      "slotLabel": "6:30 AM - 6:45 AM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 6:15:02 am"
     }
   ]
 }
