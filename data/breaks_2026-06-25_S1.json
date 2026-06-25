@@ -44,6 +44,9 @@
     ],
     "s1_slot_17_30": [
       "revthi"
+    ],
+    "s1_slot_14_0": [
+      "plyshak"
     ]
   },
   "bookingLog": [
@@ -196,6 +199,12 @@
       "slotLabel": "5:45 PM - 6:00 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:23:20 pm"
+    },
+    {
+      "user": "plyshak",
+      "slotLabel": "2:00 PM - 2:15 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:23:23 pm"
     }
   ]
 }
