@@ -22,6 +22,9 @@
       "wmkiran",
       "pgotakh",
       "kiranary"
+    ],
+    "s3_slot_6_0": [
+      "brisharx"
     ]
   },
   "bookingLog": [
@@ -114,6 +117,12 @@
       "slotLabel": "9:00 AM - 9:15 AM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 5:12:28 am"
+    },
+    {
+      "user": "brisharx",
+      "slotLabel": "6:00 AM - 6:15 AM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 5:13:18 am"
     }
   ]
 }
