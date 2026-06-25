@@ -57,7 +57,8 @@
       "revthi"
     ],
     "s1_slot_14_0": [
-      "plyshak"
+      "plyshak",
+      "kavyasrh"
     ],
     "s1_slot_15_30": [
       "muskaanc"
@@ -371,6 +372,12 @@
       "slotLabel": "1:45 PM - 2:00 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:28:57 pm"
+    },
+    {
+      "user": "kavyasrh",
+      "slotLabel": "2:00 PM - 2:15 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:29:04 pm"
     }
   ]
 }
