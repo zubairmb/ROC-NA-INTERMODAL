@@ -74,7 +74,8 @@
       "shravyal",
       "sainvspk",
       "kavyasrh",
-      "sudesnar"
+      "sudesnar",
+      "sumiyap"
     ],
     "s1_slot_16_15": [
       "shravyal"
@@ -408,6 +409,12 @@
       "slotLabel": "2:30 PM - 2:45 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:30:39 pm"
+    },
+    {
+      "user": "sumiyap",
+      "slotLabel": "6:15 PM - 6:30 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:30:45 pm"
     }
   ]
 }
