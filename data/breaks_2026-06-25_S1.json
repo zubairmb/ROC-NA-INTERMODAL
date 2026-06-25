@@ -62,7 +62,8 @@
     "s1_slot_13_30": [
       "palems",
       "revthi",
-      "poornah"
+      "poornah",
+      "malothge"
     ],
     "s1_slot_18_15": [
       "shravyal"
@@ -311,6 +312,12 @@
       "slotLabel": "4:15 PM - 4:30 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:24:49 pm"
+    },
+    {
+      "user": "malothge",
+      "slotLabel": "1:30 PM - 1:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:25:56 pm"
     }
   ]
 }
