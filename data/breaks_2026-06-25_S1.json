@@ -77,6 +77,9 @@
     ],
     "s1_slot_13_15": [
       "sainvspk"
+    ],
+    "s1_slot_18_0": [
+      "kavyasrh"
     ]
   },
   "bookingLog": [
@@ -355,6 +358,12 @@
       "slotLabel": "6:15 PM - 6:30 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:28:41 pm"
+    },
+    {
+      "user": "kavyasrh",
+      "slotLabel": "6:00 PM - 6:15 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:28:46 pm"
     }
   ]
 }
