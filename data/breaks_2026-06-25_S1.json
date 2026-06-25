@@ -73,7 +73,8 @@
       "palems",
       "revthi",
       "poornah",
-      "malothge"
+      "malothge",
+      "nikired"
     ],
     "s1_slot_18_15": [
       "shravyal",
@@ -496,6 +497,12 @@
       "slotLabel": "2:00 PM - 2:15 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 1:08:09 pm"
+    },
+    {
+      "user": "nikired",
+      "slotLabel": "1:30 PM - 1:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 5:01:45 pm"
     }
   ]
 }
