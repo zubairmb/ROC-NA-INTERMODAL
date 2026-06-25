@@ -28,7 +28,8 @@
     "s1_slot_13_45": [
       "chaakast",
       "sangeeet",
-      "jsaimoha"
+      "jsaimoha",
+      "kavyasrh"
     ],
     "s1_slot_17_0": [
       "sangeeet",
@@ -364,6 +365,12 @@
       "slotLabel": "6:00 PM - 6:15 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:28:46 pm"
+    },
+    {
+      "user": "kavyasrh",
+      "slotLabel": "1:45 PM - 2:00 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:28:57 pm"
     }
   ]
 }
