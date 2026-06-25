@@ -54,7 +54,8 @@
       "muskaanc"
     ],
     "s1_slot_13_30": [
-      "palems"
+      "palems",
+      "revthi"
     ]
   },
   "bookingLog": [
@@ -237,6 +238,12 @@
       "slotLabel": "6:30 PM - 6:45 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:23:38 pm"
+    },
+    {
+      "user": "revthi",
+      "slotLabel": "1:30 PM - 1:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:23:42 pm"
     }
   ]
 }
