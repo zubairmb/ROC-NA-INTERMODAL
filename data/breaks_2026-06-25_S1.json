@@ -93,7 +93,8 @@
       "prakumt"
     ],
     "s1_slot_14_30": [
-      "sumiyap"
+      "sumiyap",
+      "prakumt"
     ]
   },
   "bookingLog": [
@@ -450,6 +451,12 @@
       "slotLabel": "6:00 PM - 6:15 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:52:27 pm"
+    },
+    {
+      "user": "prakumt",
+      "slotLabel": "2:30 PM - 2:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:52:43 pm"
     }
   ]
 }
