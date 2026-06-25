@@ -1,0 +1,15 @@
+{
+  "bookings": {
+    "s3_slot_6_15": [
+      "wmkiran"
+    ]
+  },
+  "bookingLog": [
+    {
+      "user": "wmkiran",
+      "slotLabel": "6:15 AM - 6:30 AM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 4:35:46 am"
+    }
+  ]
+}
