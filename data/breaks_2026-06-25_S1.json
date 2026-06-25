@@ -37,7 +37,8 @@
       "sangeeet",
       "palems",
       "bhulekgu",
-      "malothge"
+      "malothge",
+      "sudesnar"
     ],
     "s1_slot_18_30": [
       "nikired",
@@ -436,6 +437,12 @@
       "slotLabel": "1:45 PM - 2:00 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:31:31 pm"
+    },
+    {
+      "user": "sudesnar",
+      "slotLabel": "5:00 PM - 5:15 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:31:32 pm"
     }
   ]
 }
