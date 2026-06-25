@@ -85,6 +85,9 @@
     "s1_slot_18_0": [
       "kavyasrh",
       "sudesnar"
+    ],
+    "s1_slot_14_30": [
+      "sumiyap"
     ]
   },
   "bookingLog": [
@@ -399,6 +402,12 @@
       "slotLabel": "2:15 PM - 2:30 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:29:40 pm"
+    },
+    {
+      "user": "sumiyap",
+      "slotLabel": "2:30 PM - 2:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:30:39 pm"
     }
   ]
 }
