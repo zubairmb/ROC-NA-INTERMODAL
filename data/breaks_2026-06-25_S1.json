@@ -25,6 +25,9 @@
     ],
     "s1_slot_17_0": [
       "sangeeet"
+    ],
+    "s1_slot_18_30": [
+      "nikired"
     ]
   },
   "bookingLog": [
@@ -111,6 +114,12 @@
       "slotLabel": "1:45 PM - 2:00 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:22:49 pm"
+    },
+    {
+      "user": "nikired",
+      "slotLabel": "6:30 PM - 6:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:22:54 pm"
     }
   ]
 }
