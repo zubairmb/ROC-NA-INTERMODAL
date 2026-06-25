@@ -22,7 +22,8 @@
       "mehaseeb",
       "revthi",
       "nikired",
-      "poornah"
+      "poornah",
+      "bhulekgu"
     ],
     "s1_slot_13_45": [
       "chaakast",
@@ -258,6 +259,12 @@
       "slotLabel": "5:00 PM - 5:15 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:23:51 pm"
+    },
+    {
+      "user": "bhulekgu",
+      "slotLabel": "6:45 PM - 7:00 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:23:56 pm"
     }
   ]
 }
