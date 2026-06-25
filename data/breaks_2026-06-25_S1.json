@@ -34,7 +34,8 @@
       "palems"
     ],
     "s1_slot_18_30": [
-      "nikired"
+      "nikired",
+      "poornah"
     ],
     "s1_slot_17_45": [
       "muskaanc",
@@ -230,6 +231,12 @@
       "slotLabel": "1:30 PM - 1:45 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:23:36 pm"
+    },
+    {
+      "user": "poornah",
+      "slotLabel": "6:30 PM - 6:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:23:38 pm"
     }
   ]
 }
