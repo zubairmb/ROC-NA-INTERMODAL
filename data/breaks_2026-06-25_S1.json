@@ -51,6 +51,9 @@
     ],
     "s1_slot_15_30": [
       "muskaanc"
+    ],
+    "s1_slot_13_30": [
+      "palems"
     ]
   },
   "bookingLog": [
@@ -221,6 +224,12 @@
       "slotLabel": "3:30 PM - 3:45 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:23:34 pm"
+    },
+    {
+      "user": "palems",
+      "slotLabel": "1:30 PM - 1:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:23:36 pm"
     }
   ]
 }
