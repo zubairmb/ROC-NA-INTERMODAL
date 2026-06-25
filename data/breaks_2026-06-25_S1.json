@@ -67,7 +67,8 @@
       "malothge"
     ],
     "s1_slot_18_15": [
-      "shravyal"
+      "shravyal",
+      "sainvspk"
     ],
     "s1_slot_16_15": [
       "shravyal"
@@ -334,6 +335,12 @@
       "slotLabel": "6:30 PM - 6:45 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:26:54 pm"
+    },
+    {
+      "user": "sainvspk",
+      "slotLabel": "6:15 PM - 6:30 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:26:57 pm"
     }
   ]
 }
