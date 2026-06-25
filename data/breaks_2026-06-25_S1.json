@@ -59,7 +59,8 @@
       "premay"
     ],
     "s1_slot_17_30": [
-      "revthi"
+      "revthi",
+      "nikired"
     ],
     "s1_slot_14_0": [
       "plyshak",
@@ -503,6 +504,12 @@
       "slotLabel": "1:30 PM - 1:45 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 5:01:45 pm"
+    },
+    {
+      "user": "nikired",
+      "slotLabel": "5:30 PM - 5:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 5:03:23 pm"
     }
   ]
 }
