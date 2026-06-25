@@ -66,6 +66,9 @@
     ],
     "s1_slot_18_15": [
       "shravyal"
+    ],
+    "s1_slot_16_15": [
+      "shravyal"
     ]
   },
   "bookingLog": [
@@ -302,6 +305,12 @@
       "slotLabel": "6:30 PM - 6:45 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:24:41 pm"
+    },
+    {
+      "user": "shravyal",
+      "slotLabel": "4:15 PM - 4:30 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:24:49 pm"
     }
   ]
 }
