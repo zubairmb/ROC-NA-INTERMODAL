@@ -40,7 +40,8 @@
       "nikired",
       "poornah",
       "bhulekgu",
-      "shravyal"
+      "shravyal",
+      "sainvspk"
     ],
     "s1_slot_17_45": [
       "muskaanc",
@@ -327,6 +328,12 @@
       "slotLabel": "1:15 PM - 1:30 PM",
       "date": "2026-06-25",
       "bookedAt": "25/6/2026, 12:26:41 pm"
+    },
+    {
+      "user": "sainvspk",
+      "slotLabel": "6:30 PM - 6:45 PM",
+      "date": "2026-06-25",
+      "bookedAt": "25/6/2026, 12:26:54 pm"
     }
   ]
 }
