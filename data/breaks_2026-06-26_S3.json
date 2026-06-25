@@ -3,6 +3,9 @@
     "s3_slot_6_15": [
       "wmkiran",
       "pgotakh"
+    ],
+    "s3_slot_9_0": [
+      "wmkiran"
     ]
   },
   "bookingLog": [
@@ -17,6 +20,12 @@
       "slotLabel": "6:15 AM - 6:30 AM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 4:36:23 am"
+    },
+    {
+      "user": "wmkiran",
+      "slotLabel": "9:00 AM - 9:15 AM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 4:36:27 am"
     }
   ]
 }
