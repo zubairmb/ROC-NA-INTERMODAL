@@ -87,6 +87,9 @@
     ],
     "s1_slot_17_15": [
       "premay"
+    ],
+    "s1_slot_14_45": [
+      "kavyasrh"
     ]
   },
   "bookingLog": [
@@ -389,6 +392,12 @@
       "slotLabel": "2:30 PM - 2:45 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 2:29:48 pm"
+    },
+    {
+      "user": "kavyasrh",
+      "slotLabel": "2:45 PM - 3:00 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 2:29:51 pm"
     }
   ]
 }
