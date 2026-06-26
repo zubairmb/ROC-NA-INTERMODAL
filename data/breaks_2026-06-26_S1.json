@@ -39,7 +39,8 @@
     "s1_slot_18_45": [
       "mehaseeb",
       "jsaimoha",
-      "nikired"
+      "nikired",
+      "revthi"
     ],
     "s1_slot_13_30": [
       "malothge",
@@ -241,6 +242,12 @@
       "slotLabel": "4:30 PM - 4:45 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:07:00 pm"
+    },
+    {
+      "user": "revthi",
+      "slotLabel": "6:45 PM - 7:00 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:07:04 pm"
     }
   ]
 }
