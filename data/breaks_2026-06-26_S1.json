@@ -62,6 +62,9 @@
     ],
     "s1_slot_16_30": [
       "revthi"
+    ],
+    "s1_slot_17_30": [
+      "jsaimoha"
     ]
   },
   "bookingLog": [
@@ -262,6 +265,12 @@
       "slotLabel": "1:45 PM - 2:00 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:07:10 pm"
+    },
+    {
+      "user": "jsaimoha",
+      "slotLabel": "5:30 PM - 5:45 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:07:20 pm"
     }
   ]
 }
