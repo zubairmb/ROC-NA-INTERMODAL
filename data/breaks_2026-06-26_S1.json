@@ -1,7 +1,8 @@
 {
   "bookings": {
     "s1_slot_20_15": [
-      "muskaanc"
+      "muskaanc",
+      "sangeeet"
     ],
     "s1_slot_20_0": [
       "muskaanc",
@@ -62,6 +63,12 @@
       "slotLabel": "8:00 PM - 8:15 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:02:48 pm"
+    },
+    {
+      "user": "sangeeet",
+      "slotLabel": "8:15 PM - 8:30 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:02:50 pm"
     }
   ]
 }
