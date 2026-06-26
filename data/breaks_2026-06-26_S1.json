@@ -21,7 +21,8 @@
       "muskaanc"
     ],
     "s1_slot_14_0": [
-      "zjabs"
+      "zjabs",
+      "premay"
     ],
     "s1_slot_14_15": [
       "zjabs",
@@ -352,6 +353,12 @@
       "slotLabel": "6:00 PM - 6:15 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:31:38 pm"
+    },
+    {
+      "user": "premay",
+      "slotLabel": "2:00 PM - 2:15 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:59:39 pm"
     }
   ]
 }
