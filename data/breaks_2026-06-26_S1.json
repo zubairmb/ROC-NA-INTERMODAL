@@ -41,7 +41,8 @@
       "mehaseeb",
       "jsaimoha",
       "nikired",
-      "revthi"
+      "revthi",
+      "rgnani@amazon.com"
     ],
     "s1_slot_13_30": [
       "malothge",
@@ -292,6 +293,12 @@
       "slotLabel": "6:30 PM - 6:45 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:08:26 pm"
+    },
+    {
+      "user": "rgnani@amazon.com",
+      "slotLabel": "6:45 PM - 7:00 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:08:28 pm"
     }
   ]
 }
