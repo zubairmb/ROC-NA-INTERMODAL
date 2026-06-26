@@ -65,7 +65,8 @@
       "rgnani@amazon.com"
     ],
     "s1_slot_16_30": [
-      "revthi"
+      "revthi",
+      "rgnani@amazon.com"
     ],
     "s1_slot_17_30": [
       "jsaimoha"
@@ -299,6 +300,12 @@
       "slotLabel": "6:45 PM - 7:00 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:08:28 pm"
+    },
+    {
+      "user": "rgnani@amazon.com",
+      "slotLabel": "4:30 PM - 4:45 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:08:59 pm"
     }
   ]
 }
