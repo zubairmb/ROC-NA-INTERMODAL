@@ -41,7 +41,8 @@
       "nikired"
     ],
     "s1_slot_13_30": [
-      "malothge"
+      "malothge",
+      "palems"
     ],
     "s1_slot_17_0": [
       "malothge"
@@ -218,6 +219,12 @@
       "slotLabel": "6:30 PM - 6:45 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:06:41 pm"
+    },
+    {
+      "user": "palems",
+      "slotLabel": "1:30 PM - 1:45 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:06:44 pm"
     }
   ]
 }
