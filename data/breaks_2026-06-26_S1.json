@@ -36,7 +36,8 @@
     ],
     "s1_slot_18_15": [
       "sudesnar",
-      "kavyasrh"
+      "kavyasrh",
+      "sumiyap"
     ],
     "s1_slot_18_45": [
       "mehaseeb",
@@ -331,6 +332,12 @@
       "slotLabel": "2:30 PM - 2:45 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:29:52 pm"
+    },
+    {
+      "user": "sumiyap",
+      "slotLabel": "6:15 PM - 6:30 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:29:58 pm"
     }
   ]
 }
