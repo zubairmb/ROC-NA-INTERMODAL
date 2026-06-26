@@ -37,6 +37,9 @@
     ],
     "s1_slot_13_30": [
       "malothge"
+    ],
+    "s1_slot_17_0": [
+      "malothge"
     ]
   },
   "bookingLog": [
@@ -147,6 +150,12 @@
       "slotLabel": "1:30 PM - 1:45 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:03:49 pm"
+    },
+    {
+      "user": "malothge",
+      "slotLabel": "5:00 PM - 5:15 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:03:55 pm"
     }
   ]
 }
