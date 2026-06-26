@@ -29,6 +29,9 @@
     ],
     "s1_slot_18_15": [
       "sudesnar"
+    ],
+    "s1_slot_18_45": [
+      "mehaseeb"
     ]
   },
   "bookingLog": [
@@ -115,6 +118,12 @@
       "slotLabel": "2:15 PM - 2:30 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:03:06 pm"
+    },
+    {
+      "user": "mehaseeb",
+      "slotLabel": "6:45 PM - 7:00 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:03:26 pm"
     }
   ]
 }
