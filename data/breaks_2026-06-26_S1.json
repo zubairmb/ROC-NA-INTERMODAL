@@ -64,7 +64,8 @@
       "jsaimoha",
       "revthi",
       "nikired",
-      "rgnani@amazon.com"
+      "rgnani@amazon.com",
+      "poornah"
     ],
     "s1_slot_16_30": [
       "revthi",
@@ -338,6 +339,12 @@
       "slotLabel": "6:15 PM - 6:30 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:29:58 pm"
+    },
+    {
+      "user": "poornah",
+      "slotLabel": "1:45 PM - 2:00 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:31:29 pm"
     }
   ]
 }
