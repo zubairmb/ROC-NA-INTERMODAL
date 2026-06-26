@@ -9,7 +9,8 @@
     "s1_slot_20_0": [
       "muskaanc",
       "sangeeet",
-      "mehaseeb"
+      "mehaseeb",
+      "malothge"
     ],
     "s1_slot_15_30": [
       "muskaanc"
@@ -124,6 +125,12 @@
       "slotLabel": "6:45 PM - 7:00 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:03:26 pm"
+    },
+    {
+      "user": "malothge",
+      "slotLabel": "8:00 PM - 8:15 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:03:32 pm"
     }
   ]
 }
