@@ -22,6 +22,9 @@
     ],
     "s1_slot_14_15": [
       "zjabs"
+    ],
+    "s1_slot_18_30": [
+      "sudesnar"
     ]
   },
   "bookingLog": [
@@ -90,6 +93,12 @@
       "slotLabel": "8:15 PM - 8:30 PM",
       "date": "2026-06-26",
       "bookedAt": "26/6/2026, 12:02:57 pm"
+    },
+    {
+      "user": "sudesnar",
+      "slotLabel": "6:30 PM - 6:45 PM",
+      "date": "2026-06-26",
+      "bookedAt": "26/6/2026, 12:02:58 pm"
     }
   ]
 }
