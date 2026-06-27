@@ -22,6 +22,9 @@
     ],
     "s1_slot_17_30": [
       "muskaanc"
+    ],
+    "s1_slot_18_15": [
+      "sudesnar"
     ]
   },
   "bookingLog": [
@@ -102,6 +105,12 @@
       "slotLabel": "6:45 PM - 7:00 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:00:56 pm"
+    },
+    {
+      "user": "sudesnar",
+      "slotLabel": "6:15 PM - 6:30 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:01:01 pm"
     }
   ]
 }
