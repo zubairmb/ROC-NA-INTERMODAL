@@ -28,7 +28,8 @@
     ],
     "s1_slot_18_15": [
       "sudesnar",
-      "vamsipri"
+      "vamsipri",
+      "nikired"
     ],
     "s1_slot_18_30": [
       "sudesnar",
@@ -244,6 +245,12 @@
       "slotLabel": "6:00 PM - 6:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:13:43 pm"
+    },
+    {
+      "user": "nikired",
+      "slotLabel": "6:15 PM - 6:30 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:13:48 pm"
     }
   ]
 }
