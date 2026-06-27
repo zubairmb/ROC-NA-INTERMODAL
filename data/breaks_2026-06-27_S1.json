@@ -35,6 +35,9 @@
     ],
     "s1_slot_13_30": [
       "zjabs"
+    ],
+    "s1_slot_16_30": [
+      "vamsipri"
     ]
   },
   "bookingLog": [
@@ -157,6 +160,12 @@
       "slotLabel": "6:30 PM - 6:45 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:03:33 pm"
+    },
+    {
+      "user": "vamsipri",
+      "slotLabel": "4:30 PM - 4:45 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:03:40 pm"
     }
   ]
 }
