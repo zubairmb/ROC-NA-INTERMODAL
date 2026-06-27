@@ -15,7 +15,8 @@
     ],
     "s1_slot_18_45": [
       "mehaseeb",
-      "zjabs"
+      "zjabs",
+      "sangeeet"
     ],
     "s1_slot_14_15": [
       "mehaseeb",
@@ -182,6 +183,12 @@
       "slotLabel": "6:30 PM - 6:45 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:05:42 pm"
+    },
+    {
+      "user": "sangeeet",
+      "slotLabel": "6:45 PM - 7:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:05:45 pm"
     }
   ]
 }
