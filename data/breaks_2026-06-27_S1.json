@@ -33,7 +33,8 @@
       "sudesnar",
       "sumiyap",
       "vamsipri",
-      "sangeeet"
+      "sangeeet",
+      "bbabitaj"
     ],
     "s1_slot_13_30": [
       "zjabs"
@@ -207,6 +208,12 @@
       "slotLabel": "5:00 PM - 5:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:05:58 pm"
+    },
+    {
+      "user": "bbabitaj",
+      "slotLabel": "6:30 PM - 6:45 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:09:40 pm"
     }
   ]
 }
