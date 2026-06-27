@@ -79,6 +79,9 @@
     "s1_slot_17_15": [
       "rgnani@amazon.com",
       "revthi"
+    ],
+    "s1_slot_17_45": [
+      "bhulekgu"
     ]
   },
   "bookingLog": [
@@ -381,6 +384,12 @@
       "slotLabel": "6:00 PM - 6:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:22:05 pm"
+    },
+    {
+      "user": "bhulekgu",
+      "slotLabel": "5:45 PM - 6:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:22:20 pm"
     }
   ]
 }
