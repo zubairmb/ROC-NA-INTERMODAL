@@ -43,7 +43,8 @@
       "bbabitaj"
     ],
     "s1_slot_13_30": [
-      "zjabs"
+      "zjabs",
+      "kavyasrh"
     ],
     "s1_slot_16_30": [
       "vamsipri"
@@ -318,6 +319,12 @@
       "slotLabel": "6:15 PM - 6:30 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:17:57 pm"
+    },
+    {
+      "user": "kavyasrh",
+      "slotLabel": "1:30 PM - 1:45 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:18:24 pm"
     }
   ]
 }
