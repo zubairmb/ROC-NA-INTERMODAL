@@ -165,6 +165,12 @@
             <label>Enter your Login ID to get started</label><br>
             <input type="text" id="loginInput" placeholder="e.g. johndoe" onkeypress="if(event.key==='Enter')setLogin()">
             <button onclick="setLogin()">Continue</button>
+            <div id="tokenSection" style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.1);">
+                <label style="font-size:12px; color:#a0aec0;">GitHub Token (one-time setup for shared sync)</label><br>
+                <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx" style="margin:8px; padding:10px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.08); color:#fff; font-size:13px; width:260px;">
+                <button onclick="saveToken()" style="padding:8px 16px; border-radius:8px; border:none; background:#38a169; color:#fff; font-size:12px; cursor:pointer; font-weight:600;">Save Token</button>
+                <p style="font-size:11px; color:#4a5568; margin-top:6px;">Token is stored only in your browser. Never shared. Required for live sync.</p>
+            </div>
         </div>
 
         <div id="mainContent" class="hidden">
@@ -316,14 +322,22 @@
             </div>
         </div>
         <div class="footer">
-            <p>Break Tracker v3.0 | Auto-resets daily at 04:30 AM IST</p>
+            <p>Break Tracker v4.0 | Shared Sync via GitHub | Auto-resets daily at 04:30 AM IST</p>
         </div>
     </div>
     <div class="toast" id="toast"></div>
     <script>
         // ============ CONFIGURATION ============
-        var SHAREPOINT_SITE = "https://amazon.sharepoint.com/sites/HYD-Intermodal";
-        var LIST_NAME = "breakbookings";
+        var GIST_ID = ""; // Will be set after first sync or from localStorage
+        var GITHUB_TOKEN = "";
+        var SYNC_INTERVAL = 5000; // Poll every 5 seconds
+        var isSyncing = false;
+        var syncQueue = [];
+
+        function getGistId() { return storageGet("break_gist_id") || GIST_ID; }
+        function setGistId(id) { GIST_ID = id; storageSet("break_gist_id", id); }
+        function getToken() { return storageGet("break_github_token") || ""; }
+        function setToken(t) { GITHUB_TOKEN = t; storageSet("break_github_token", t); }
 
         // ============ SHIFT DEFINITIONS ============
         var SHIFT_CONFIG = {
@@ -399,9 +413,11 @@
         function getStorageKey() { return "break_" + currentShift + "_" + getTodayKey(); }
         function getLogKey() { return "breaklog_" + currentShift + "_" + getTodayKey(); }
 
-        // ============ STORAGE ============
+        // ============ STORAGE (Local + Gist Sync) ============
         function storageGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
         function storageSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+
+        function getGistFileName() { return "break_data_" + currentShift + "_" + getTodayKey() + ".json"; }
 
         function loadBookings() {
             var stored = storageGet(getStorageKey());
@@ -410,8 +426,6 @@
             var storedLog = storageGet(getLogKey());
             if (storedLog) { try { bookingLog = JSON.parse(storedLog); } catch(e) { bookingLog = []; } }
             else { bookingLog = []; }
-
-            // FIX: If bookings are empty but log has entries, rebuild bookings from log
             if (Object.keys(bookings).length === 0 && bookingLog.length > 0) {
                 rebuildBookingsFromLog();
             }
@@ -421,7 +435,6 @@
             bookings = {};
             for (var i = 0; i < bookingLog.length; i++) {
                 var entry = bookingLog[i];
-                // Find slot ID from label
                 for (var j = 0; j < SLOTS.length; j++) {
                     if (SLOTS[j].label === entry.slotLabel) {
                         var slotId = SLOTS[j].id;
@@ -433,7 +446,6 @@
                     }
                 }
             }
-            // Save the rebuilt bookings
             storageSet(getStorageKey(), JSON.stringify(bookings));
         }
 
@@ -441,16 +453,114 @@
             storageSet(getStorageKey(), JSON.stringify(bookings));
             storageSet(getLogKey(), JSON.stringify(bookingLog));
             saveToHistoryIndex(getTodayKey());
+            // Push to Gist in background
+            pushToGist();
         }
 
-        // ============ HISTORY ============
-        function getHistoryIndex() { var raw = storageGet("breakhistory_index_" + currentShift); if (raw) { try { return JSON.parse(raw); } catch(e) { return []; } } return []; }
-        function saveToHistoryIndex(dateKey) { var idx = getHistoryIndex(); if (idx.indexOf(dateKey)===-1) { idx.push(dateKey); idx.sort().reverse(); storageSet("breakhistory_index_" + currentShift, JSON.stringify(idx)); } }
-        function getHistoryForDate(dateKey) { var raw = storageGet("breaklog_" + currentShift + "_" + dateKey); if (raw) { try { return JSON.parse(raw); } catch(e) { return []; } } return []; }
+        // ============ GIST SYNC ENGINE ============
+        function gistHeaders() {
+            var token = getToken();
+            if (!token) return null;
+            return { "Authorization": "token " + token, "Content-Type": "application/json", "Accept": "application/vnd.github.v3+json" };
+        }
+
+        function pushToGist() {
+            var headers = gistHeaders();
+            if (!headers) return;
+            var gistId = getGistId();
+            var payload = JSON.stringify({ bookings: bookings, bookingLog: bookingLog, lastUpdated: new Date().toISOString(), updatedBy: currentUser });
+            var files = {};
+            files[getGistFileName()] = { content: payload };
+            var body = JSON.stringify({ description: "Break Slot Tracker - " + currentShift + " - " + getTodayKey(), files: files });
+
+            if (isSyncing) { syncQueue.push(body); return; }
+            isSyncing = true;
+
+            var method = gistId ? "PATCH" : "POST";
+            var url = gistId ? "https://api.github.com/gists/" + gistId : "https://api.github.com/gists";
+
+            fetch(url, { method: method, headers: headers, body: body })
+            .then(function(resp) { return resp.json(); })
+            .then(function(data) {
+                if (data.id) {
+                    setGistId(data.id);
+                    updateStatus("connected", "&#10003; Synced \u2014 " + new Date().toLocaleTimeString("en-IN"));
+                }
+                isSyncing = false;
+                if (syncQueue.length > 0) { var next = syncQueue.pop(); syncQueue = []; pushToGist(); }
+            })
+            .catch(function(err) {
+                isSyncing = false;
+                updateStatus("error", "&#9888; Sync failed \u2014 retrying...");
+                console.error("Gist push error:", err);
+            });
+        }
+
+        function pullFromGist() {
+            var headers = gistHeaders();
+            var gistId = getGistId();
+            if (!headers || !gistId) return;
+
+            fetch("https://api.github.com/gists/" + gistId, { method: "GET", headers: headers })
+            .then(function(resp) {
+                if (resp.status === 404) { updateStatus("error", "Gist not found. Will create on next booking."); return null; }
+                return resp.json();
+            })
+            .then(function(data) {
+                if (!data || !data.files) return;
+                var fileName = getGistFileName();
+                if (data.files[fileName] && data.files[fileName].content) {
+                    try {
+                        var remote = JSON.parse(data.files[fileName].content);
+                        // Merge: remote wins for data we don't have locally
+                        var remoteBookings = remote.bookings || {};
+                        var remoteLog = remote.bookingLog || [];
+                        // Smart merge — union of bookings
+                        mergeBookings(remoteBookings, remoteLog);
+                        updateStatus("connected", "&#10003; Live \u2014 " + new Date().toLocaleTimeString("en-IN"));
+                    } catch(e) { console.error("Parse error on pull:", e); }
+                }
+                renderSlots();
+                if (document.getElementById("tab-manager").classList.contains("active")) renderManagerView();
+            })
+            .catch(function(err) {
+                console.error("Gist pull error:", err);
+            });
+        }
+
+        function mergeBookings(remoteBookings, remoteLog) {
+            // Merge bookings: union of all users per slot
+            for (var slotId in remoteBookings) {
+                if (!remoteBookings.hasOwnProperty(slotId)) continue;
+                if (!bookings[slotId]) bookings[slotId] = [];
+                for (var i = 0; i < remoteBookings[slotId].length; i++) {
+                    var user = remoteBookings[slotId][i];
+                    if (bookings[slotId].indexOf(user) === -1) {
+                        bookings[slotId].push(user);
+                    }
+                }
+            }
+            // Merge log: add entries we don't have (by user+slotLabel+date combo)
+            var existingKeys = {};
+            for (var i = 0; i < bookingLog.length; i++) {
+                var e = bookingLog[i];
+                existingKeys[e.user + "|" + e.slotLabel + "|" + e.date] = true;
+            }
+            for (var i = 0; i < remoteLog.length; i++) {
+                var r = remoteLog[i];
+                var key = r.user + "|" + r.slotLabel + "|" + r.date;
+                if (!existingKeys[key]) {
+                    bookingLog.push(r);
+                    existingKeys[key] = true;
+                }
+            }
+            // Save merged data locally
+            storageSet(getStorageKey(), JSON.stringify(bookings));
+            storageSet(getLogKey(), JSON.stringify(bookingLog));
+        }
 
         // ============ CROSS-TAB LIVE SYNC ============
         window.addEventListener("storage", function(e) {
-            // Another tab/window changed localStorage — reload and re-render
             if (e.key && (e.key === getStorageKey() || e.key === getLogKey())) {
                 loadBookings();
                 renderSlots();
@@ -458,16 +568,21 @@
             }
         });
 
-        // Auto-refresh every 2 seconds to stay live
+        // Auto-refresh: pull from Gist every 5 seconds
         function startAutoRefresh() {
             if (refreshInterval) clearInterval(refreshInterval);
             refreshInterval = setInterval(function() {
                 if (!currentUser) return;
-                loadBookings();
-                renderSlots();
-                if (document.getElementById("tab-manager").classList.contains("active")) renderManagerView();
-            }, 2000);
+                pullFromGist();
+            }, SYNC_INTERVAL);
+            // Also do an immediate pull
+            pullFromGist();
         }
+
+        // ============ HISTORY ============
+        function getHistoryIndex() { var raw = storageGet("breakhistory_index_" + currentShift); if (raw) { try { return JSON.parse(raw); } catch(e) { return []; } } return []; }
+        function saveToHistoryIndex(dateKey) { var idx = getHistoryIndex(); if (idx.indexOf(dateKey)===-1) { idx.push(dateKey); idx.sort().reverse(); storageSet("breakhistory_index_" + currentShift, JSON.stringify(idx)); } }
+        function getHistoryForDate(dateKey) { var raw = storageGet("breaklog_" + currentShift + "_" + dateKey); if (raw) { try { return JSON.parse(raw); } catch(e) { return []; } } return []; }
 
 
         // ============ RENDER BOOKING SLOTS ============
@@ -715,14 +830,27 @@
         }
 
         // ============ LOGIN ============
+        function saveToken() {
+            var token = document.getElementById("tokenInput").value.trim();
+            if (!token) { showToast("Please enter a GitHub token.", true); return; }
+            setToken(token);
+            showToast("Token saved! Sync is now enabled.");
+            document.getElementById("tokenInput").value = "";
+        }
+
         function setLogin() {
             var val = document.getElementById("loginInput").value.trim().toLowerCase();
             if (!val) { alert("Please enter your login ID"); return; }
             currentUser = val;
             storageSet("break_current_user", currentUser);
+            GITHUB_TOKEN = getToken();
             document.getElementById("loginSection").style.display = "none";
             document.getElementById("mainContent").classList.remove("hidden");
-            updateStatus("connected", "&#10003; Local mode — live sync every 2s");
+            if (GITHUB_TOKEN) {
+                updateStatus("loading", '<span class="spinner"></span> Connecting to shared sync...');
+            } else {
+                updateStatus("error", "&#9888; No token set \u2014 running in local-only mode. Set token to enable shared sync.");
+            }
             checkAdminAccess();
             loadBookings();
             renderSlots();
@@ -740,41 +868,67 @@
         });
 
         function bookSlot(slotId, slotLabel, maxCap, btnElem) {
-            // Re-read from storage immediately before writing (prevent race conditions)
-            loadBookings();
-
-            // Check if user has already booked 4 slots today
-            var userBookingCount = 0;
-            for (var key in bookings) {
-                if (bookings.hasOwnProperty(key)) {
-                    for (var u = 0; u < bookings[key].length; u++) {
-                        if (bookings[key][u] === currentUser) userBookingCount++;
-                    }
-                }
-            }
-            if (userBookingCount >= 4) {
-                showToast("You can only book a maximum of 4 breaks per day.", true);
-                return;
-            }
-
-            if (!bookings[slotId]) bookings[slotId] = [];
-            if (bookings[slotId].length >= maxCap) { showToast("This slot is full!", true); renderSlots(); return; }
-            for (var i = 0; i < bookings[slotId].length; i++) {
-                if (bookings[slotId][i] === currentUser) { showToast("You already booked this slot.", true); return; }
-            }
-
             btnElem.disabled = true;
             btnElem.innerHTML = '<span class="spinner"></span>Booking...';
 
-            var bookedAt = new Date().toLocaleString("en-IN");
+            // Pull latest from Gist first (concurrency safety)
+            var headers = gistHeaders();
+            var gistId = getGistId();
 
-            // Write to both bookings and log atomically
-            bookings[slotId].push(currentUser);
-            bookingLog.push({ user: currentUser, slotLabel: slotLabel, date: getTodayKey(), bookedAt: bookedAt });
-            saveBookings();
+            function doBook() {
+                // Re-read local storage (may have been updated by pull)
+                loadBookings();
 
-            showToast("\u2713 Break booked: " + slotLabel + " (" + (userBookingCount + 1) + "/4 used)");
-            renderSlots();
+                // Check if user has already booked 4 slots today
+                var userBookingCount = 0;
+                for (var key in bookings) {
+                    if (bookings.hasOwnProperty(key)) {
+                        for (var u = 0; u < bookings[key].length; u++) {
+                            if (bookings[key][u] === currentUser) userBookingCount++;
+                        }
+                    }
+                }
+                if (userBookingCount >= 4) {
+                    showToast("You can only book a maximum of 4 breaks per day.", true);
+                    renderSlots(); return;
+                }
+                if (!bookings[slotId]) bookings[slotId] = [];
+                if (bookings[slotId].length >= maxCap) { showToast("This slot is full!", true); renderSlots(); return; }
+                for (var i = 0; i < bookings[slotId].length; i++) {
+                    if (bookings[slotId][i] === currentUser) { showToast("You already booked this slot.", true); renderSlots(); return; }
+                }
+
+                var bookedAt = new Date().toLocaleString("en-IN");
+                bookings[slotId].push(currentUser);
+                bookingLog.push({ user: currentUser, slotLabel: slotLabel, date: getTodayKey(), bookedAt: bookedAt });
+                saveBookings();
+                showToast("\u2713 Break booked: " + slotLabel + " (" + (userBookingCount + 1) + "/4 used)");
+                renderSlots();
+            }
+
+            // If we have Gist sync, pull first then book
+            if (headers && gistId) {
+                fetch("https://api.github.com/gists/" + gistId, { method: "GET", headers: headers })
+                .then(function(resp) { return resp.json(); })
+                .then(function(data) {
+                    if (data && data.files) {
+                        var fileName = getGistFileName();
+                        if (data.files[fileName] && data.files[fileName].content) {
+                            try {
+                                var remote = JSON.parse(data.files[fileName].content);
+                                mergeBookings(remote.bookings || {}, remote.bookingLog || []);
+                            } catch(e) {}
+                        }
+                    }
+                    doBook();
+                })
+                .catch(function(err) {
+                    console.error("Pull before book failed:", err);
+                    doBook(); // Still book locally even if pull fails
+                });
+            } else {
+                doBook();
+            }
         }
 
         // ============ BREAK ADHERENCE ============
@@ -1159,13 +1313,23 @@
 
         // ============ INIT ============
         (function init() {
+            // Restore token if saved
+            GITHUB_TOKEN = getToken();
+            if (GITHUB_TOKEN) {
+                var tokenInput = document.getElementById("tokenInput");
+                if (tokenInput) tokenInput.placeholder = "Token saved ✓ (enter new to replace)";
+            }
             // Restore user session if exists
             var savedUser = storageGet("break_current_user");
             if (savedUser) {
                 currentUser = savedUser;
                 document.getElementById("loginSection").style.display = "none";
                 document.getElementById("mainContent").classList.remove("hidden");
-                updateStatus("connected", "&#10003; Local mode — live sync every 2s");
+                if (GITHUB_TOKEN) {
+                    updateStatus("loading", '<span class="spinner"></span> Connecting...');
+                } else {
+                    updateStatus("error", "&#9888; No token \u2014 local-only mode. Set token in login screen to enable sync.");
+                }
                 checkAdminAccess();
                 startAutoRefresh();
             }
