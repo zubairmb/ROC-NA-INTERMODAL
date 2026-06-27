@@ -81,7 +81,8 @@
       "revthi"
     ],
     "s1_slot_17_45": [
-      "bhulekgu"
+      "bhulekgu",
+      "jsaimoha"
     ]
   },
   "bookingLog": [
@@ -390,6 +391,12 @@
       "slotLabel": "5:45 PM - 6:00 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:22:20 pm"
+    },
+    {
+      "user": "jsaimoha",
+      "slotLabel": "5:45 PM - 6:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:22:51 pm"
     }
   ]
 }
