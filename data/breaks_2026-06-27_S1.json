@@ -59,7 +59,8 @@
     "s1_slot_17_0": [
       "sangeeet",
       "bbabitaj",
-      "revthi"
+      "revthi",
+      "jsaimoha"
     ],
     "s1_slot_18_0": [
       "nikired",
@@ -367,6 +368,12 @@
       "slotLabel": "1:45 PM - 2:00 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:21:36 pm"
+    },
+    {
+      "user": "jsaimoha",
+      "slotLabel": "5:00 PM - 5:15 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:21:43 pm"
     }
   ]
 }
