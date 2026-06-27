@@ -7,6 +7,9 @@
     "s1_slot_20_0": [
       "muskaanc",
       "mehaseeb"
+    ],
+    "s1_slot_18_45": [
+      "mehaseeb"
     ]
   },
   "bookingLog": [
@@ -33,6 +36,12 @@
       "slotLabel": "8:00 PM - 8:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:00:13 PM"
+    },
+    {
+      "user": "mehaseeb",
+      "slotLabel": "6:45 PM - 7:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:00:21 PM"
     }
   ]
 }
