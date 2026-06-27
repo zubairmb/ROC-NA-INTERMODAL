@@ -63,7 +63,8 @@
     "s1_slot_18_0": [
       "nikired",
       "rgnani@amazon.com",
-      "kavyasrh"
+      "kavyasrh",
+      "revthi"
     ],
     "s1_slot_13_45": [
       "nikired",
@@ -325,6 +326,12 @@
       "slotLabel": "1:30 PM - 1:45 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:18:24 pm"
+    },
+    {
+      "user": "revthi",
+      "slotLabel": "6:00 PM - 6:15 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:20:48 pm"
     }
   ]
 }
