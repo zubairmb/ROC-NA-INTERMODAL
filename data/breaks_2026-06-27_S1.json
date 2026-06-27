@@ -85,7 +85,8 @@
     "s1_slot_17_45": [
       "bhulekgu",
       "jsaimoha",
-      "muskaanc"
+      "muskaanc",
+      "vijayagb"
     ],
     "s1_slot_14_0": [
       "vijayagb"
@@ -427,6 +428,12 @@
       "slotLabel": "2:00 PM - 2:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 1:14:06 pm"
+    },
+    {
+      "user": "vijayagb",
+      "slotLabel": "5:45 PM - 6:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 1:14:15 pm"
     }
   ]
 }
