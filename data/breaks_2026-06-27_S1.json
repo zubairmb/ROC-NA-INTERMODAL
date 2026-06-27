@@ -14,7 +14,8 @@
       "zjabs"
     ],
     "s1_slot_18_45": [
-      "mehaseeb"
+      "mehaseeb",
+      "zjabs"
     ],
     "s1_slot_14_15": [
       "mehaseeb"
@@ -95,6 +96,12 @@
       "slotLabel": "8:15 PM - 8:30 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:00:49 pm"
+    },
+    {
+      "user": "zjabs",
+      "slotLabel": "6:45 PM - 7:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:00:56 pm"
     }
   ]
 }
