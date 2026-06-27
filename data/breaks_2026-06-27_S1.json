@@ -3,7 +3,8 @@
     "s1_slot_20_15": [
       "muskaanc",
       "mehaseeb",
-      "sumiyap"
+      "sumiyap",
+      "zjabs"
     ],
     "s1_slot_20_0": [
       "muskaanc",
@@ -74,6 +75,12 @@
       "slotLabel": "8:00 PM - 8:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:00:42 pm"
+    },
+    {
+      "user": "zjabs",
+      "slotLabel": "8:15 PM - 8:30 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:00:43 pm"
     }
   ]
 }
