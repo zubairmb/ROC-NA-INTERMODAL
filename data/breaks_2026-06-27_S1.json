@@ -75,7 +75,8 @@
       "rgnani@amazon.com",
       "jsaimoha",
       "revthi",
-      "bhulekgu"
+      "bhulekgu",
+      "premay"
     ],
     "s1_slot_17_15": [
       "rgnani@amazon.com",
@@ -404,6 +405,12 @@
       "slotLabel": "5:00 PM - 5:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:36:30 pm"
+    },
+    {
+      "user": "premay",
+      "slotLabel": "1:45 PM - 2:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:36:52 pm"
     }
   ]
 }
