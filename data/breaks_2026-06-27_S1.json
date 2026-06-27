@@ -69,7 +69,8 @@
     ],
     "s1_slot_13_45": [
       "nikired",
-      "rgnani@amazon.com"
+      "rgnani@amazon.com",
+      "jsaimoha"
     ],
     "s1_slot_17_15": [
       "rgnani@amazon.com"
@@ -339,6 +340,12 @@
       "slotLabel": "5:00 PM - 5:15 PM",
       "date": "2026-06-27",
       "bookedAt": "27/6/2026, 12:20:57 pm"
+    },
+    {
+      "user": "jsaimoha",
+      "slotLabel": "1:45 PM - 2:00 PM",
+      "date": "2026-06-27",
+      "bookedAt": "27/6/2026, 12:20:59 pm"
     }
   ]
 }
