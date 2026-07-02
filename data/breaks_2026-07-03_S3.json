@@ -1,1 +1,1 @@
-{"bookings":{"s3_6_0":["mahprate"]},"bookingLog":[{"user":"mahprate","slotLabel":"6:00 AM - 6:15 AM","date":"2026-07-03","bookedAt":"3/7/2026, 4:31:24 am"}]}
+{"bookings":{"s3_6_0":["mahprate"],"s3_8_0":["mahprate"]},"bookingLog":[{"user":"mahprate","slotLabel":"6:00 AM - 6:15 AM","date":"2026-07-03","bookedAt":"3/7/2026, 4:31:24 am"},{"user":"mahprate","slotLabel":"8:00 AM - 8:15 AM","date":"2026-07-03","bookedAt":"3/7/2026, 4:31:26 am"}]}
