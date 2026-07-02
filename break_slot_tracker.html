@@ -273,29 +273,40 @@ function pushBookings(retryCount) {
         body: JSON.stringify(body)
     })
     .then(function(r) {
-        if (r.status === 409 && retryCount < 3) {
-            // SHA conflict — someone else wrote. Fetch latest, merge, retry.
-            console.warn("[Tracker] Conflict detected, merging... (attempt " + (retryCount+1) + ")");
+        if ((r.status === 409 || r.status === 422) && retryCount < 3) {
+            // SHA conflict — file was modified by someone else. Fetch latest, merge, retry.
+            console.warn("[Tracker] SHA conflict, fetching latest and retrying... (attempt " + (retryCount+1) + ")");
             return fetchBookings().then(function() {
-                // Re-apply our local changes on top of fetched data
                 mergeLocalPending();
                 return pushBookings(retryCount + 1);
             });
         }
-        if (!r.ok) throw new Error("HTTP " + r.status);
+        if (!r.ok) {
+            return r.text().then(function(t) { throw new Error(r.status + ": " + t); });
+        }
         return r.json();
     })
     .then(function(data) {
         if (data && data.content) {
             ghSHA[currentShift] = data.content.sha;
-            lastETag[currentShift] = ""; // invalidate ETag cache
+            lastETag[currentShift] = "";
         }
         isSyncing = false;
         clearPendingQueue();
+        setStatus("connected", "&#10003; Connected — syncing every 10s");
     })
     .catch(function(err) {
         isSyncing = false;
-        console.warn("[Tracker] Push failed:", err.message);
+        if (retryCount < 3) {
+            // One more try — fetch fresh SHA and retry
+            console.warn("[Tracker] Push error, retrying:", err.message);
+            return fetchBookings().then(function() {
+                mergeLocalPending();
+                return pushBookings(retryCount + 1);
+            });
+        }
+        console.error("[Tracker] Push failed after retries:", err.message);
+        setStatus("error", "&#9888; Push failed: will retry on next sync cycle");
     });
 }
 
