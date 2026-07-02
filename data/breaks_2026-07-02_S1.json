@@ -1,1 +1,1 @@
-{"bookings":{"s1_13_30":["zubairmb"]},"bookingLog":[{"user":"zubairmb","slotLabel":"1:30 PM - 1:45 PM","date":"2026-07-02","bookedAt":"2/7/2026, 9:50:08 pm"}]}
+{"bookings":{"s1_13_30":["zubairmb"],"s1_13_45":["zubairmb"]},"bookingLog":[{"user":"zubairmb","slotLabel":"1:30 PM - 1:45 PM","date":"2026-07-02","bookedAt":"2/7/2026, 9:50:08 pm"},{"user":"zubairmb","slotLabel":"1:45 PM - 2:00 PM","date":"2026-07-02","bookedAt":"2/7/2026, 9:50:10 pm"}]}
