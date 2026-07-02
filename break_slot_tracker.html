@@ -221,33 +221,42 @@ function ghFile(){return "breaks_"+getTodayKey()+"_"+currentShift+".json";}
 function sGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function sSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function getToken(){return sGet("gh_tracker_token")||"";}
-// ============ GITHUB READ (with ETag caching) ============
-var lastETag = {};
+// ============ GITHUB READ (using raw URL for public access) ============
+
+// ============ GITHUB RAW URL (for reads — no auth needed, no CORS issues) ============
+var GH_RAW = "https://raw.githubusercontent.com/" + GH_REPO + "/main/data/";
 
 function fetchBookings() {
-    var token = getToken();
-    if (!token) { loadLocal(); return Promise.resolve(); }
-    var url = GH_API + ghFile();
-    var headers = { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" };
-    if (lastETag[currentShift]) headers["If-None-Match"] = lastETag[currentShift];
-
-    return fetch(url, { headers: headers, cache: "no-store" })
+    // Step 1: Read via raw URL (public, no token, no CORS block)
+    var rawUrl = GH_RAW + ghFile() + "?t=" + Date.now(); // cache-bust
+    return fetch(rawUrl, { cache: "no-store" })
     .then(function(r) {
-        if (r.status === 304) return null; // not modified, skip
         if (r.status === 404) { bookings={}; bookingLog=[]; return null; }
-        if (r.status === 401 || r.status === 403) { setStatus("error","Token invalid or rate-limited"); return null; }
         if (!r.ok) throw new Error("HTTP "+r.status);
-        lastETag[currentShift] = r.headers.get("ETag") || "";
-        return r.json();
+        return r.text();
     })
-    .then(function(data) {
-        if (!data) return;
-        ghSHA[currentShift] = data.sha;
-        var raw = atob(data.content.replace(/\n/g,""));
-        var parsed = JSON.parse(raw);
+    .then(function(text) {
+        if (!text) return;
+        var parsed = JSON.parse(text);
         bookings = parsed.bookings || {};
         bookingLog = parsed.bookingLog || [];
         saveLocal();
+    })
+    .then(function() {
+        // Step 2: Get SHA via API (needed for writes) — only if we have a token
+        var token = getToken();
+        if (!token) return;
+        return fetch(GH_API + ghFile(), {
+            headers: { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" }
+        })
+        .then(function(r) {
+            if (!r.ok) return null;
+            return r.json();
+        })
+        .then(function(data) {
+            if (data && data.sha) ghSHA[currentShift] = data.sha;
+        })
+        .catch(function() {}); // SHA fetch failed — will retry on push
     })
     .catch(function(err) {
         console.warn("[Tracker] Fetch error:", err.message);
@@ -289,7 +298,6 @@ function pushBookings(retryCount) {
     .then(function(data) {
         if (data && data.content) {
             ghSHA[currentShift] = data.content.sha;
-            lastETag[currentShift] = "";
         }
         isSyncing = false;
         clearPendingQueue();
