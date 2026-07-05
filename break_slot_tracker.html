@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Break Slot Tracker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);min-height:100vh;color:#e0e0e0;padding:20px}
+.container{max-width:1200px;margin:0 auto}
+.header{text-align:center;padding:20px 0 30px}
+.header h1{font-size:28px;color:#fff;margin-bottom:5px}
+.header p{color:#a0aec0;font-size:14px}
+.shift-selector{display:flex;justify-content:center;gap:10px;margin:15px 0}
+.shift-btn{padding:10px 24px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#a0aec0;font-size:13px;cursor:pointer;font-weight:600;transition:all 0.2s}
+.shift-btn:hover{border-color:#63b3ed;color:#63b3ed}
+.shift-btn.active{background:#3182ce;border-color:#3182ce;color:#fff}
+.shift-info{display:flex;justify-content:center;gap:20px;margin:10px 0;flex-wrap:wrap}
+.shift-badge{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px 16px;font-size:13px}
+.shift-badge span{color:#63b3ed;font-weight:600}
+.reset-notice{text-align:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px;margin:15px 0;font-size:12px;color:#fbd38d}
+.login-section{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;margin-bottom:25px;text-align:center}
+.login-section label{font-size:14px;color:#a0aec0}
+.login-section input{margin:10px;padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-size:14px;width:200px}
+.login-section input:focus{outline:none;border-color:#63b3ed}
+.login-section button{padding:10px 24px;border-radius:8px;border:none;background:#3182ce;color:#fff;font-size:14px;cursor:pointer;font-weight:600}
+.login-section button:hover{background:#2b6cb0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Break Slot Tracker</h1>
+        <p>ROC-NA Intermodal</p>
+        <div class="shift-selector">
+            <button class="shift-btn active" onclick="selectShift('S3')">Shift 3 (4AM–1PM)</button>
+            <button class="shift-btn" onclick="selectShift('S1')">Shift 1 (12PM–9PM)</button>
+        </div>
+        <div class="shift-info" id="shiftInfo"></div>
+        <div class="reset-notice" id="resetNotice"></div>
+    </div>
+    <div class="login-section" id="loginSection">
+        <label>Enter your Login ID to get started</label><br>
+        <input type="text" id="loginInput" placeholder="e.g. zubairmb" onkeypress="if(event.key==='Enter')doLogin()">
+        <button onclick="doLogin()">Continue</button>
+    </div>
+
+    <div id="mainApp" class="hidden">
+        <div id="userInfo" style="text-align:center;margin-bottom:15px;font-size:13px;color:#a0aec0;"></div>
+
+        <!-- Tab Navigation -->
+        <div style="display:flex;justify-content:center;gap:0;margin-bottom:20px;border-bottom:2px solid rgba(255,255,255,0.1);">
+            <button class="tab-btn active" onclick="switchTab('booking')">&#128197; Book a Slot</button>
+            <button class="tab-btn" onclick="switchTab('manager')">&#128202; Manager View</button>
+            <button class="tab-btn" onclick="switchTab('history')">&#128218; History</button>
+            <button class="tab-btn" onclick="switchTab('admin')" id="adminTab" style="display:none;">&#128274; Admin</button>
+        </div>
+
+        <!-- TAB: Booking -->
+        <div class="tab-panel active" id="panel-booking">
+            <div class="date-display" id="dateDisplay" style="text-align:center;margin-bottom:20px;font-size:16px;color:#63b3ed;font-weight:600;"></div>
+            <div class="legend" style="display:flex;justify-content:center;gap:20px;margin-bottom:20px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#a0aec0;"><div style="width:14px;height:14px;border-radius:4px;background:#2d3748;border:1px solid #4a5568;"></div> Available</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#a0aec0;"><div style="width:14px;height:14px;border-radius:4px;background:#e53e3e;"></div> Full</div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#a0aec0;"><div style="width:14px;height:14px;border-radius:4px;background:#38a169;"></div> Your Booking</div>
+            </div>
+            <div id="slotsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:30px;"></div>
+        </div>
+
+        <!-- TAB: Manager View -->
+        <div class="tab-panel" id="panel-manager">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+                <div style="font-size:15px;color:#fff;font-weight:600;">Today's Slot Overview</div>
+                <button onclick="exportCSV()" style="padding:8px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#63b3ed;font-size:13px;cursor:pointer;font-weight:600;">&#128229; Export CSV</button>
+            </div>
+            <div id="mgrSummary" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;justify-content:center;"></div>
+            <div id="mgrGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:30px;"></div>
+        </div>
+
+        <!-- TAB: History -->
+        <div class="tab-panel" id="panel-history">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+                <div style="font-size:15px;color:#fff;font-weight:600;">Break History Repository</div>
+                <button onclick="exportAllHistory()" style="padding:8px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#63b3ed;font-size:13px;cursor:pointer;font-weight:600;">&#128229; Export to CSV</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+                <label style="color:#a0aec0;font-size:13px;">Select Date:</label>
+                <select id="historyDateSelect" onchange="renderHistory()" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;"></select>
+            </div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead><tr style="background:rgba(255,255,255,0.08);"><th style="text-align:left;padding:10px 12px;color:#63b3ed;font-weight:600;">#</th><th style="text-align:left;padding:10px 12px;color:#63b3ed;font-weight:600;">Login</th><th style="text-align:left;padding:10px 12px;color:#63b3ed;font-weight:600;">Slot</th><th style="text-align:left;padding:10px 12px;color:#63b3ed;font-weight:600;">Booked At</th></tr></thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB: Admin -->
+        <div class="tab-panel" id="panel-admin">
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:30px;text-align:center;">
+                <h3 style="color:#fff;margin-bottom:16px;">&#128274; Admin — Reset Bookings</h3>
+                <p style="color:#a0aec0;font-size:13px;margin-bottom:24px;">These actions are irreversible. Only managers can access this tab.</p>
+                <div style="display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;">
+                    <button onclick="resetShift('S1')" style="padding:12px 24px;border-radius:8px;border:1px solid #38a169;background:rgba(56,161,105,0.15);color:#68d391;font-size:13px;cursor:pointer;font-weight:600;">Reset Today's Breaks — Shift 1</button>
+                    <button onclick="resetShift('S3')" style="padding:12px 24px;border-radius:8px;border:1px solid #38a169;background:rgba(56,161,105,0.15);color:#68d391;font-size:13px;cursor:pointer;font-weight:600;">Reset Today's Breaks — Shift 3</button>
+                    <button onclick="resetAll()" style="padding:14px 24px;border-radius:8px;border:none;background:#38a169;color:#fff;font-size:14px;cursor:pointer;font-weight:600;">Reset All Breaks Today (Both Shifts)</button>
+                </div>
+            </div>
+            <div id="memberMgmt" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;margin-top:16px;display:none;">
+                <h3 style="color:#fff;margin-bottom:12px;">&#128101; Manage Admin Members</h3>
+                <p style="color:#a0aec0;font-size:12px;margin-bottom:14px;">Add or remove members who can access this Admin tab. Only super admin can manage members.</p>
+                <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;">
+                    <input type="text" id="newMemberInput" placeholder="Enter login ID..." style="padding:8px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;width:200px;">
+                    <button onclick="addMember()" style="padding:8px 16px;border-radius:6px;border:none;background:#3182ce;color:#fff;font-size:13px;cursor:pointer;font-weight:600;">Add Member</button>
+                </div>
+                <div id="memberList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" style="text-align:center;padding:20px;color:#4a5568;font-size:11px;">
+        <p>Break Tracker v5.0 | Shared via GitHub</p>
+    </div>
+</div>
+<div id="toast" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#38a169;color:#fff;padding:14px 28px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.3);display:none;z-index:1000;text-align:center;"></div>
+<style>
+.tab-btn{padding:12px 24px;border:none;background:none;color:#a0aec0;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s}
+.tab-btn:hover{color:#63b3ed}
+.tab-btn.active{color:#63b3ed;border-bottom-color:#63b3ed}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.slot-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;transition:all 0.2s}
+.slot-card:hover:not(.full){border-color:#63b3ed;transform:translateY(-2px)}
+.slot-card.full{border-color:#e53e3e;background:rgba(229,62,62,0.1)}
+.slot-card.yours{border-color:#38a169;background:rgba(56,161,105,0.1)}
+.slot-time{font-size:14px;font-weight:600;color:#fff;margin-bottom:8px}
+.slot-count{font-size:12px;color:#a0aec0;margin-bottom:8px}
+.cap-bar{height:4px;background:#2d3748;border-radius:2px;overflow:hidden;margin-bottom:10px}
+.cap-fill{height:100%;border-radius:2px;transition:width 0.3s}
+.cap-fill.low{background:#38a169}.cap-fill.med{background:#d69e2e}.cap-fill.high{background:#e53e3e}
+.book-btn{margin-top:8px;padding:6px 14px;background:#3182ce;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}
+.book-btn:hover{background:#2b6cb0}
+.booked-list{margin-top:6px;font-size:11px;color:#a0aec0}
+.booked-list .you{color:#68d391;font-weight:600}
+</style>
+<script>
+// ============ CONFIGURATION ============
+var GH_REPO = "zubairmb/ROC-NA-INTERMODAL";
+var GH_API = "https://api.github.com/repos/" + GH_REPO + "/contents/data/";
+var GH_RAW = "https://raw.githubusercontent.com/" + GH_REPO + "/main/data/";
+var MAX_PER_SLOT = 4;
+var MAX_PER_USER = 4;
+var POLL_MS = 8000;
+
+// ============ SHIFT DEFINITIONS ============
+// Shift 3: 4AM-1PM, breaks 5AM-12PM (freeze first & last hour)
+// Shift 1: 12PM-9PM, breaks 1PM-8PM (freeze first & last hour)
+var SHIFTS = {
+    S3: {
+        name: "Shift 3 (4AM–1PM)",
+        slotStart: 5, slotEnd: 12, // 5:00AM to 12:00PM
+        resetHour: 4, resetMin: 30,
+        resetLabel: "4:30 AM"
+    },
+    S1: {
+        name: "Shift 1 (12PM–9PM)",
+        slotStart: 13, slotEnd: 20.5, // 1:00PM to 8:30PM (freeze 7-8PM, include 8-8:30PM)
+        resetHour: 12, resetMin: 30,
+        resetLabel: "12:30 PM"
+    }
+};
+
+function generateSlots(shift) {
+    var cfg = SHIFTS[shift], slots = [];
+    var h = cfg.slotStart, m = 0;
+    var endHour = Math.floor(cfg.slotEnd);
+    var endMin = (cfg.slotEnd % 1) * 60; // 0.5 = 30 min
+
+    while (h < endHour || (h === endHour && m < endMin)) {
+        var eM = m + 15, eH = h;
+        if (eM >= 60) { eM -= 60; eH++; }
+        var cap = MAX_PER_SLOT;
+
+        // Shift 3: capacity 5 from 8AM to 11AM
+        if (shift === "S3" && h >= 8 && h < 11) cap = 5;
+
+        // Shift 1 rules:
+        if (shift === "S1") {
+            // Capacity 7 from 1PM to 2PM
+            if (h === 13) cap = 7;
+            // Capacity 5 from 2PM to 4PM
+            if (h >= 14 && h < 16) cap = 5;
+            // Freeze 7PM to 8PM (skip these slots)
+            if (h >= 19 && h < 20) { m += 15; if (m >= 60) { m -= 60; h++; } continue; }
+        }
+
+        slots.push({ id: shift + "_" + h + "_" + m, label: fmtTime(h, m) + " – " + fmtTime(eH, eM), capacity: cap });
+        m += 15;
+        if (m >= 60) { m -= 60; h++; }
+    }
+    return slots;
+}
+
+function fmtTime(h, m) {
+    var p = h >= 12 ? "PM" : "AM", d = h > 12 ? h - 12 : h;
+    if (d === 0) d = 12;
+    return d + ":" + (m < 10 ? "0" : "") + m + " " + p;
+}
+// ============ STATE ============
+var currentShift = "S3";
+var SLOTS = [];
+var currentUser = "";
+var bookings = {}; // slotId -> [usernames]
+var ghSHA = "";
+var pollTimer = null;
+var pushTimer = null;
+var isBusy = false;
+
+// ============ HELPERS ============
+function sGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
+function sSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+function getToken() { return sGet("bst_token") || ""; }
+function ghFile() { return "breaks_" + currentShift + "_" + todayKey() + ".json"; }
+
+function todayKey() {
+    var n = new Date();
+    // Before 4:30AM, consider it previous day
+    if (n.getHours() < 4 || (n.getHours() === 4 && n.getMinutes() < 30)) n.setDate(n.getDate() - 1);
+    return n.getFullYear() + "-" + (n.getMonth()+1 < 10 ? "0" : "") + (n.getMonth()+1) + "-" + (n.getDate() < 10 ? "0" : "") + n.getDate();
+}
+
+function showToast(msg, err) {
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.background = err ? "#e53e3e" : "#38a169";
+    t.style.display = "block";
+    setTimeout(function() { t.style.display = "none"; }, 3500);
+}
+
+// ============ GITHUB: READ ============
+function fetchBookings() {
+    var token = getToken();
+    if (!token) { loadLocal(); return Promise.resolve(); }
+
+    // Try API first (real-time)
+    return fetch(GH_API + ghFile(), {
+        headers: { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" },
+        cache: "no-store"
+    })
+    .then(function(r) {
+        if (r.status === 404) { bookings = {}; ghSHA = ""; return; }
+        if (r.status === 401 || r.status === 403) {
+            // API blocked, try raw
+            return fetchRaw();
+        }
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json().then(function(data) {
+            ghSHA = data.sha;
+            var content = JSON.parse(atob(data.content.replace(/\n/g, "")));
+            bookings = content.bookings || {};
+            saveLocal();
+        });
+    })
+    .catch(function(err) {
+        console.warn("[BST] API read failed:", err.message);
+        return fetchRaw();
+    });
+}
+
+function fetchRaw() {
+    return fetch(GH_RAW + ghFile() + "?t=" + Date.now(), { cache: "no-store" })
+    .then(function(r) {
+        if (r.status === 404) { bookings = {}; return; }
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+    })
+    .then(function(text) {
+        if (!text) return;
+        var data = JSON.parse(text);
+        bookings = data.bookings || {};
+        saveLocal();
+    })
+    .catch(function() { loadLocal(); });
+}
+// ============ GITHUB: WRITE (with conflict retry) ============
+function pushBookings(retry) {
+    if (!retry) retry = 0;
+    var token = getToken();
+    if (!token) return Promise.resolve();
+
+    var payload = JSON.stringify({ bookings: bookings }, null, 2);
+    var content = btoa(unescape(encodeURIComponent(payload)));
+    var body = { message: "Update " + ghFile(), content: content };
+    if (ghSHA) body.sha = ghSHA;
+
+    isBusy = true;
+    return fetch(GH_API + ghFile(), {
+        method: "PUT",
+        headers: { "Authorization": "token " + token, "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    })
+    .then(function(r) {
+        if ((r.status === 409 || r.status === 422) && retry < 3) {
+            // Conflict — fetch latest, merge our booking, retry
+            return fetchBookings().then(function() { return pushBookings(retry + 1); });
+        }
+        if (!r.ok) return r.text().then(function(t) { throw new Error(r.status + " " + t); });
+        return r.json();
+    })
+    .then(function(data) {
+        if (data && data.content) ghSHA = data.content.sha;
+        isBusy = false;
+    })
+    .catch(function(err) {
+        isBusy = false;
+        console.warn("[BST] Push failed:", err.message);
+    });
+}
+
+function schedulePush() {
+    if (pushTimer) clearTimeout(pushTimer);
+    pushTimer = setTimeout(function() { pushBookings(); }, 1500);
+}
+
+// ============ LOCAL STORAGE (cache) ============
+function saveLocal() { sSet("bst_" + currentShift + "_" + todayKey(), JSON.stringify(bookings)); }
+function loadLocal() { var r = sGet("bst_" + currentShift + "_" + todayKey()); bookings = r ? JSON.parse(r) : {}; }
+
+// ============ POLLING ============
+function startPolling() {
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(function() {
+        if (!currentUser || isBusy) return;
+        fetchBookings().then(renderSlots);
+    }, POLL_MS);
+}
+
+// ============ AUTO RESET CHECK ============
+var lastResetMin = -1;
+function checkAutoReset() {
+    var now = new Date(), h = now.getHours(), m = now.getMinutes();
+    if (m === lastResetMin) return;
+    lastResetMin = m;
+    var cfg = SHIFTS[currentShift];
+    if (h === cfg.resetHour && m === cfg.resetMin) {
+        bookings = {};
+        ghSHA = "";
+        saveLocal();
+        pushBookings();
+        renderSlots();
+        showToast(cfg.name + " auto-reset at " + cfg.resetLabel);
+    }
+}
+setInterval(checkAutoReset, 30000);
+// ============ SHIFT SELECTION ============
+function selectShift(shift) {
+    currentShift = shift;
+    SLOTS = generateSlots(shift);
+    var btns = document.querySelectorAll(".shift-btn");
+    btns[0].classList.toggle("active", shift === "S3");
+    btns[1].classList.toggle("active", shift === "S1");
+
+    var cfg = SHIFTS[shift];
+    var slotsLabel = shift === "S1" ? "1:00 PM – 8:30 PM" : fmtTime(cfg.slotStart, 0) + " – " + fmtTime(cfg.slotEnd, 0);
+    document.getElementById("shiftInfo").innerHTML =
+        '<div class="shift-badge">Slots: <span>' + slotsLabel + '</span></div>'
+        + '<div class="shift-badge">Duration: <span>15 min each</span></div>'
+        + '<div class="shift-badge">Max/Slot: <span>' + (shift === "S1" ? "7 (1-2PM) / 4 (rest)" : "5 (8-11AM) / 4 (rest)") + '</span></div>';
+
+    document.getElementById("resetNotice").textContent =
+        shift === "S3" ? "Tracker will be auto refreshed at 04:30 AM" : "Tracker will be auto refreshed at 12:30 PM";
+
+    loadLocal();
+    if (currentUser) {
+        renderSlots();
+        fetchBookings().then(renderSlots);
+    }
+}
+
+// ============ LOGIN ============
+function saveToken() {
+    var t = document.getElementById("tokenInput").value.trim();
+    if (!t) { alert("Paste token first."); return; }
+    sSet("bst_token", t);
+    document.getElementById("tokenArea").style.display = "none";
+    showToast("Token saved!");
+}
+
+function doLogin() {
+    var val = document.getElementById("loginInput").value.trim().toLowerCase();
+    if (!val) { alert("Enter your login ID."); return; }
+    currentUser = val;
+    sSet("bst_user", val);
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("mainApp").classList.remove("hidden");
+    document.getElementById("userInfo").textContent = "Logged in as: " + val + " | Max 4 breaks per day";
+    checkAdmin();
+    loadLocal();
+    loadHistory();
+    renderSlots();
+    if (getToken()) { fetchBookings().then(function() { renderSlots(); startPolling(); }); }
+}
+
+// ============ RENDER SLOTS ============
+function renderSlots() {
+    var grid = document.getElementById("slotsGrid");
+    grid.innerHTML = "";
+    document.getElementById("dateDisplay").textContent =
+        new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+    // Count user's total bookings today
+    var userTotal = 0;
+    for (var k in bookings) if (bookings.hasOwnProperty(k)) {
+        if (bookings[k].indexOf(currentUser) !== -1) userTotal++;
+    }
+
+    for (var i = 0; i < SLOTS.length; i++) {
+        var slot = SLOTS[i];
+        var maxCap = slot.capacity || MAX_PER_SLOT;
+        var booked = bookings[slot.id] || [];
+        var count = booked.length;
+        var isFull = count >= maxCap;
+        var isYours = booked.indexOf(currentUser) !== -1;
+
+        var card = document.createElement("div");
+        card.className = "slot-card" + (isFull ? " full" : "") + (isYours ? " yours" : "");
+
+        var pct = (count / maxCap) * 100;
+        var cls = pct >= 75 ? "high" : pct >= 50 ? "med" : "low";
+
+        var names = "";
+        if (count > 0) {
+            names = '<div class="booked-list">';
+            for (var j = 0; j < booked.length; j++) {
+                names += (booked[j] === currentUser ? '<span class="you">' + booked[j] + ' (you)</span>' : booked[j]);
+                if (j < booked.length - 1) names += ", ";
+            }
+            names += '</div>';
+        }
+
+        var action = "";
+        if (isYours) {
+            action = '<div style="margin-top:8px;font-size:12px;color:#68d391;font-weight:600;">&#10003; Your break</div>';
+        } else if (isFull) {
+            action = '<div style="margin-top:8px;font-size:12px;color:#fc8181;font-weight:600;">Slot Full</div>';
+        } else if (userTotal >= MAX_PER_USER) {
+            action = '<div style="margin-top:8px;font-size:12px;color:#fbd38d;">Limit reached (4/4)</div>';
+        } else {
+            action = '<button class="book-btn" data-id="' + slot.id + '" data-label="' + slot.label + '" data-cap="' + maxCap + '">Book This Slot</button>';
+        }
+
+        card.innerHTML = '<div class="slot-time">' + slot.label + '</div>'
+            + '<div class="slot-count">' + count + ' / ' + maxCap + ' booked</div>'
+            + '<div class="cap-bar"><div class="cap-fill ' + cls + '" style="width:' + pct + '%"></div></div>'
+            + names + action;
+        grid.appendChild(card);
+    }
+}
+// ============ TAB SWITCHING ============
+var ADMIN_USERS = ["zubairmb", "surhaksh", "muthyald", "errabel", "mmrunal", "wasimmac", "velpupra", "vvyas"];
+var SUPER_ADMIN = "zubairmb";
+
+// Load extra admins from localStorage
+function loadAdminMembers() {
+    var saved = sGet("bst_admin_members");
+    if (saved) {
+        try {
+            var extra = JSON.parse(saved);
+            for (var i = 0; i < extra.length; i++) {
+                if (ADMIN_USERS.indexOf(extra[i]) === -1) ADMIN_USERS.push(extra[i]);
+            }
+        } catch(e) {}
+    }
+}
+function saveAdminMembers() { sSet("bst_admin_members", JSON.stringify(ADMIN_USERS)); }
+
+function addMember() {
+    if (currentUser !== SUPER_ADMIN) { showToast("Only super admin can add members.", true); return; }
+    var input = document.getElementById("newMemberInput");
+    var login = input.value.trim().toLowerCase();
+    if (!login) { showToast("Enter a login ID.", true); return; }
+    if (ADMIN_USERS.indexOf(login) !== -1) { showToast(login + " is already a member.", true); return; }
+    ADMIN_USERS.push(login);
+    saveAdminMembers();
+    input.value = "";
+    renderMemberList();
+    showToast(login + " added as admin.");
+}
+
+function removeMember(login) {
+    if (currentUser !== SUPER_ADMIN) { showToast("Only super admin can remove members.", true); return; }
+    if (login === SUPER_ADMIN) { showToast("Cannot remove super admin.", true); return; }
+    ADMIN_USERS = ADMIN_USERS.filter(function(u) { return u !== login; });
+    saveAdminMembers();
+    renderMemberList();
+    showToast(login + " removed.");
+}
+
+function renderMemberList() {
+    var el = document.getElementById("memberList");
+    if (!el) return;
+    var html = '<div style="margin-top:8px;"><strong style="color:#63b3ed;font-size:12px;">Current Admin Members:</strong></div><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">';
+    for (var i = 0; i < ADMIN_USERS.length; i++) {
+        var u = ADMIN_USERS[i];
+        var isSuperAdmin = u === SUPER_ADMIN;
+        html += '<span style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:4px 10px;font-size:12px;color:#e0e0e0;">'
+            + u + (isSuperAdmin ? ' <span style="color:#fbd38d;">&#128081;</span>' : '')
+            + '</span>';
+    }
+    html += '</div>';
+    el.innerHTML = html;
+}
+
+function switchTab(name) {
+    var panels = document.querySelectorAll(".tab-panel");
+    var btns = document.querySelectorAll(".tab-btn");
+    for (var i = 0; i < panels.length; i++) panels[i].classList.remove("active");
+    for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+    document.getElementById("panel-" + name).classList.add("active");
+    if (name === "booking") btns[0].classList.add("active");
+    else if (name === "manager") { btns[1].classList.add("active"); renderManagerView(); }
+    else if (name === "history") { btns[2].classList.add("active"); renderHistory(); }
+    else { btns[3].classList.add("active"); }
+}
+
+function checkAdmin() {
+    document.getElementById("adminTab").style.display = ADMIN_USERS.indexOf(currentUser) !== -1 ? "" : "none";
+    // Show member management only for super admin
+    var mgmt = document.getElementById("memberMgmt");
+    if (mgmt) mgmt.style.display = currentUser === SUPER_ADMIN ? "block" : "none";
+    if (currentUser === SUPER_ADMIN) renderMemberList();
+}
+
+// ============ MANAGER VIEW ============
+function renderManagerView() {
+    var summary = document.getElementById("mgrSummary");
+    var grid = document.getElementById("mgrGrid");
+    grid.innerHTML = "";
+
+    var totalBooked = 0, uniqueUsers = {}, totalCap = 0;
+    for (var i = 0; i < SLOTS.length; i++) totalCap += (SLOTS[i].capacity || MAX_PER_SLOT);
+    for (var k in bookings) if (bookings.hasOwnProperty(k)) {
+        totalBooked += bookings[k].length;
+        for (var u = 0; u < bookings[k].length; u++) uniqueUsers[bookings[k][u]] = 1;
+    }
+
+    summary.innerHTML = ''
+        + '<div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:12px 20px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#63b3ed;">' + totalBooked + '</div><div style="font-size:11px;color:#a0aec0;">Total Bookings</div></div>'
+        + '<div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:12px 20px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#63b3ed;">' + Object.keys(uniqueUsers).length + '</div><div style="font-size:11px;color:#a0aec0;">Unique Associates</div></div>'
+        + '<div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:12px 20px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#63b3ed;">' + (totalCap - totalBooked) + '</div><div style="font-size:11px;color:#a0aec0;">Remaining Capacity</div></div>';
+
+    for (var i = 0; i < SLOTS.length; i++) {
+        var slot = SLOTS[i], maxCap = slot.capacity || MAX_PER_SLOT;
+        var booked = bookings[slot.id] || [], count = booked.length, full = count >= maxCap;
+        var card = document.createElement("div");
+        card.className = "slot-card" + (full ? " full" : (count > 0 ? " yours" : ""));
+        card.style.cursor = "default";
+        var pct = (count / maxCap) * 100, cls = pct >= 75 ? "high" : pct >= 50 ? "med" : "low";
+        var names = "";
+        if (count > 0) {
+            names = '<div style="margin-top:8px;font-size:11px;color:#a0aec0;">';
+            for (var j = 0; j < booked.length; j++) names += '<div style="padding:2px 0;">&#8226; ' + booked[j] + '</div>';
+            names += '</div>';
+        } else {
+            names = '<div style="margin-top:8px;font-size:12px;color:#4a5568;">No bookings</div>';
+        }
+        card.innerHTML = '<div class="slot-time">' + slot.label + '</div>'
+            + '<div class="slot-count">' + count + ' / ' + maxCap + '</div>'
+            + '<div class="cap-bar"><div class="cap-fill ' + cls + '" style="width:' + pct + '%"></div></div>' + names;
+        grid.appendChild(card);
+    }
+}
+
+// ============ HISTORY (day-wise repository) ============
+var bookingHistory = [];
+
+function addToHistory(user, slotLabel) {
+    bookingHistory.push({ user: user, slotLabel: slotLabel, bookedAt: new Date().toLocaleString("en-IN") });
+    sSet("bst_hist_" + currentShift + "_" + todayKey(), JSON.stringify(bookingHistory));
+    // Save this date to the history index
+    saveToHistoryIndex(todayKey());
+}
+
+function loadHistory() {
+    var r = sGet("bst_hist_" + currentShift + "_" + todayKey());
+    bookingHistory = r ? JSON.parse(r) : [];
+}
+
+function getHistoryForDate(dateKey) {
+    var r = sGet("bst_hist_" + currentShift + "_" + dateKey);
+    return r ? JSON.parse(r) : [];
+}
+
+function getHistoryIndex() {
+    var r = sGet("bst_histindex_" + currentShift);
+    return r ? JSON.parse(r) : [];
+}
+
+function saveToHistoryIndex(dateKey) {
+    var idx = getHistoryIndex();
+    if (idx.indexOf(dateKey) === -1) {
+        idx.push(dateKey);
+        idx.sort().reverse(); // newest first
+        sSet("bst_histindex_" + currentShift, JSON.stringify(idx));
+    }
+}
+
+function populateHistoryDates() {
+    var select = document.getElementById("historyDateSelect");
+    var idx = getHistoryIndex();
+    var today = todayKey();
+    if (idx.indexOf(today) === -1) idx.unshift(today);
+    select.innerHTML = "";
+    for (var i = 0; i < idx.length; i++) {
+        var opt = document.createElement("option");
+        opt.value = idx[i];
+        opt.textContent = idx[i] + (idx[i] === today ? " (Today)" : "");
+        select.appendChild(opt);
+    }
+}
+
+function renderHistory() {
+    populateHistoryDates();
+    var select = document.getElementById("historyDateSelect");
+    var dateKey = select.value || todayKey();
+    var log = getHistoryForDate(dateKey);
+    var tbody = document.getElementById("historyBody");
+    tbody.innerHTML = "";
+    if (log.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#a0aec0;padding:20px;">No bookings recorded for this date.</td></tr>';
+        return;
+    }
+    for (var i = 0; i < log.length; i++) {
+        var e = log[i];
+        var row = document.createElement("tr");
+        row.innerHTML = '<td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.06);color:#e0e0e0;">' + (i+1) + '</td>'
+            + '<td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.06);color:#e0e0e0;">' + e.user + '</td>'
+            + '<td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.06);color:#e0e0e0;">' + e.slotLabel + '</td>'
+            + '<td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.06);color:#e0e0e0;">' + e.bookedAt + '</td>';
+        tbody.appendChild(row);
+    }
+}
+
+function exportAllHistory() {
+    var idx = getHistoryIndex();
+    var rows = [["#", "Date", "Login", "Slot", "Booked At"]];
+    var c = 1;
+    for (var d = 0; d < idx.length; d++) {
+        var log = getHistoryForDate(idx[d]);
+        for (var i = 0; i < log.length; i++) {
+            rows.push([c++, idx[d], log[i].user, log[i].slotLabel, log[i].bookedAt]);
+        }
+    }
+    if (rows.length === 1) { showToast("No history to export.", true); return; }
+    var csv = rows.map(function(r) { return r.map(function(c) { return '"' + String(c||"").replace(/"/g,'""') + '"'; }).join(","); }).join("\n");
+    var blob = new Blob([csv], { type: "text/csv" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "break_history_" + currentShift + "_all.csv";
+    a.click();
+    showToast("Exported all history!");
+}
+
+// ============ ADMIN RESET ============
+function resetShift(shift) {
+    if (ADMIN_USERS.indexOf(currentUser) === -1) { showToast("Access denied.", true); return; }
+    if (!confirm("Reset ALL break selections for " + SHIFTS[shift].name + " today?")) return;
+    // Clear bookings for that shift
+    var prevShift = currentShift;
+    currentShift = shift;
+    bookings = {};
+    bookingHistory = [];
+    saveLocal();
+    sSet("bst_hist_" + shift + "_" + todayKey(), "[]");
+    ghSHA = "";
+    schedulePush();
+    // Restore to previous shift and re-render
+    currentShift = prevShift;
+    SLOTS = generateSlots(prevShift);
+    loadLocal();
+    renderSlots();
+    showToast(SHIFTS[shift].name + " breaks reset.");
+}
+
+function resetAll() {
+    if (ADMIN_USERS.indexOf(currentUser) === -1) { showToast("Access denied.", true); return; }
+    if (!confirm("Reset ALL break selections for BOTH shifts today? This cannot be undone.")) return;
+    // Reset S1
+    sSet("bst_S1_" + todayKey(), "{}");
+    sSet("bst_hist_S1_" + todayKey(), "[]");
+    // Reset S3
+    sSet("bst_S3_" + todayKey(), "{}");
+    sSet("bst_hist_S3_" + todayKey(), "[]");
+    // Clear current state
+    bookings = {};
+    bookingHistory = [];
+    ghSHA = "";
+    saveLocal();
+    schedulePush();
+    renderSlots();
+    showToast("All breaks reset for both shifts.");
+}
+
+// ============ EXPORT CSV ============
+function exportCSV() {
+    loadHistory();
+    var rows = [["#", "Login", "Slot", "Booked At"]];
+    for (var i = 0; i < bookingHistory.length; i++) {
+        rows.push([i+1, bookingHistory[i].user, bookingHistory[i].slotLabel, bookingHistory[i].bookedAt]);
+    }
+    var csv = rows.map(function(r) { return r.map(function(c) { return '"' + String(c||"").replace(/"/g,'""') + '"'; }).join(","); }).join("\n");
+    var blob = new Blob([csv], { type: "text/csv" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "breaks_" + currentShift + "_" + todayKey() + ".csv";
+    a.click();
+    showToast("Exported!");
+}
+
+// ============ BOOKING (local-first, zero lag) ============
+document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("book-btn")) {
+        var id = e.target.getAttribute("data-id");
+        var label = e.target.getAttribute("data-label");
+        var cap = parseInt(e.target.getAttribute("data-cap")) || MAX_PER_SLOT;
+        if (id && label) bookSlot(id, label, cap);
+    }
+});
+
+function bookSlot(slotId, slotLabel, maxCap) {
+    var userTotal = 0;
+    for (var k in bookings) if (bookings.hasOwnProperty(k)) {
+        if (bookings[k].indexOf(currentUser) !== -1) userTotal++;
+    }
+    if (userTotal >= MAX_PER_USER) { showToast("Max " + MAX_PER_USER + " breaks per day.", true); return; }
+    if (!bookings[slotId]) bookings[slotId] = [];
+    if (bookings[slotId].length >= maxCap) { showToast("Slot full!", true); return; }
+    if (bookings[slotId].indexOf(currentUser) !== -1) { showToast("Already booked.", true); return; }
+
+    bookings[slotId].push(currentUser);
+    saveLocal();
+    addToHistory(currentUser, slotLabel);
+    renderSlots();
+    showToast("\u2713 Booked: " + slotLabel + " (" + (userTotal + 1) + "/" + MAX_PER_USER + ")");
+    schedulePush();
+}
+
+// ============ INIT ============
+(function() {
+    loadAdminMembers();
+    selectShift("S3");
+    var savedUser = sGet("bst_user");
+    if (savedUser) {
+        currentUser = savedUser;
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("mainApp").classList.remove("hidden");
+        document.getElementById("userInfo").textContent = "Logged in as: " + savedUser + " | Max 4 breaks per day";
+        checkAdmin();
+        loadLocal();
+        loadHistory();
+        renderSlots();
+        if (getToken()) { fetchBookings().then(function() { renderSlots(); startPolling(); }); }
+    }
+})();
+</script>
+</body>
+</html>
