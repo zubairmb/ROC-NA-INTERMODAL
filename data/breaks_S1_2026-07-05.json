@@ -1,1 +1,1 @@
-{"bookings":{"S1_13_0":["testfromscript"]},"history":[{"user":"testfromscript","slotLabel":"1:00 PM - 1:15 PM","bookedAt":"test"}]}
+{"bookings":{"S1_13_0":["testfromscript"],"S1_14_30":["zubairmb"]},"history":[{"user":"testfromscript","slotLabel":"1:00 PM - 1:15 PM","bookedAt":"test"},{"user":"zubairmb","slotLabel":"2:30 PM - 2:45 PM","bookedAt":"5/7/2026, 3:39:55 pm"}]}
