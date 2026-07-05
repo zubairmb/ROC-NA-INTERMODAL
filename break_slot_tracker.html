@@ -147,7 +147,6 @@ body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-g
 // ============ CONFIGURATION ============
 var GH_REPO = "zubairmb/ROC-NA-INTERMODAL";
 var GH_API = "https://api.github.com/repos/" + GH_REPO + "/contents/data/";
-var GH_RAW = "https://raw.githubusercontent.com/" + GH_REPO + "/main/data/";
 var MAX_PER_SLOT = 4;
 var MAX_PER_USER = 4;
 var POLL_MS = 8000;
@@ -241,48 +240,28 @@ function showToast(msg, err) {
 function fetchBookings() {
     var token = getToken();
     if (!token) { loadLocal(); return Promise.resolve(); }
-
-    // Try API first (real-time)
-    return fetch(GH_API + ghFile(), {
+    var url = GH_API + ghFile();
+    return fetch(url, {
         headers: { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" },
         cache: "no-store"
     })
     .then(function(r) {
-        if (r.status === 404) { bookings = {}; ghSHA = ""; return; }
-        if (r.status === 401 || r.status === 403) {
-            // API blocked, try raw
-            return fetchRaw();
-        }
-        if (!r.ok) throw new Error("HTTP " + r.status);
+        if (r.status === 404) { bookings = {}; bookingHistory = []; ghSHA = ""; return; }
+        if (!r.ok) throw new Error("Read HTTP " + r.status);
         return r.json().then(function(data) {
             ghSHA = data.sha;
-            var content = JSON.parse(atob(data.content.replace(/\n/g, "")));
-            bookings = content.bookings || {};
-            if (content.history) { bookingHistory = content.history; sSet("bst_hist_" + currentShift + "_" + todayKey(), JSON.stringify(bookingHistory)); }
+            var raw = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
+            var parsed = JSON.parse(raw);
+            bookings = parsed.bookings || {};
+            if (parsed.history) bookingHistory = parsed.history;
             saveLocal();
+            sSet("bst_hist_" + currentShift + "_" + todayKey(), JSON.stringify(bookingHistory));
         });
     })
     .catch(function(err) {
-        console.warn("[BST] API read failed:", err.message);
-        return fetchRaw();
+        console.warn("[BST] Fetch error:", err.message);
+        loadLocal();
     });
-}
-
-function fetchRaw() {
-    return fetch(GH_RAW + ghFile() + "?t=" + Date.now(), { cache: "no-store" })
-    .then(function(r) {
-        if (r.status === 404) { bookings = {}; return; }
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.text();
-    })
-    .then(function(text) {
-        if (!text) return;
-        var data = JSON.parse(text);
-        bookings = data.bookings || {};
-        if (data.history) { bookingHistory = data.history; sSet("bst_hist_" + currentShift + "_" + todayKey(), JSON.stringify(bookingHistory)); }
-        saveLocal();
-    })
-    .catch(function() { loadLocal(); });
 }
 // ============ GITHUB: WRITE (with conflict retry) ============
 function pushBookings(retry) {
@@ -290,7 +269,7 @@ function pushBookings(retry) {
     var token = getToken();
     if (!token) return Promise.resolve();
 
-    var payload = JSON.stringify({ bookings: bookings, history: bookingHistory }, null, 2);
+    var payload = JSON.stringify({ bookings: bookings, history: bookingHistory });
     var content = btoa(unescape(encodeURIComponent(payload)));
     var body = { message: "Update " + ghFile(), content: content };
     if (ghSHA) body.sha = ghSHA;
@@ -591,16 +570,20 @@ function fetchHistoryForDate(dateKey) {
     var token = getToken();
     if (!token) return Promise.resolve(getHistoryForDate(dateKey));
     var file = "breaks_" + currentShift + "_" + dateKey + ".json";
-    return fetch(GH_RAW + file + "?t=" + Date.now(), { cache: "no-store" })
+    return fetch(GH_API + file, {
+        headers: { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" },
+        cache: "no-store"
+    })
     .then(function(r) {
         if (r.status === 404) return [];
         if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.text();
+        return r.json();
     })
-    .then(function(text) {
-        if (!text) return [];
-        var data = JSON.parse(text);
-        var hist = data.history || [];
+    .then(function(data) {
+        if (!data || !data.content) return [];
+        var raw = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
+        var parsed = JSON.parse(raw);
+        var hist = parsed.history || [];
         if (hist.length > 0) sSet("bst_hist_" + currentShift + "_" + dateKey, JSON.stringify(hist));
         return hist;
     })
