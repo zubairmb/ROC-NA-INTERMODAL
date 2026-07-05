@@ -684,39 +684,61 @@ function exportAllHistory() {
 function resetShift(shift) {
     if (ADMIN_USERS.indexOf(currentUser) === -1) { showToast("Access denied.", true); return; }
     if (!confirm("Reset ALL break selections for " + SHIFTS[shift].name + " today?")) return;
-    // Clear bookings for that shift
+
+    // Switch to target shift, clear, and push immediately
     var prevShift = currentShift;
     currentShift = shift;
+    SLOTS = generateSlots(shift);
     bookings = {};
     bookingHistory = [];
+    ghSHA = "";
     saveLocal();
     sSet("bst_hist_" + shift + "_" + todayKey(), "[]");
-    ghSHA = "";
-    schedulePush();
-    // Restore to previous shift and re-render
-    currentShift = prevShift;
-    SLOTS = generateSlots(prevShift);
-    loadLocal();
-    renderSlots();
+
+    // Push empty state immediately (not debounced)
+    pushBookings().then(function() {
+        // Switch back to whatever shift we were viewing
+        currentShift = prevShift;
+        SLOTS = generateSlots(prevShift);
+        loadLocal();
+        loadHistory();
+        renderSlots();
+    });
+
     showToast(SHIFTS[shift].name + " breaks reset.");
 }
 
 function resetAll() {
     if (ADMIN_USERS.indexOf(currentUser) === -1) { showToast("Access denied.", true); return; }
     if (!confirm("Reset ALL break selections for BOTH shifts today? This cannot be undone.")) return;
-    // Reset S1
-    sSet("bst_S1_" + todayKey(), "{}");
-    sSet("bst_hist_S1_" + todayKey(), "[]");
+
     // Reset S3
-    sSet("bst_S3_" + todayKey(), "{}");
-    sSet("bst_hist_S3_" + todayKey(), "[]");
-    // Clear current state
+    currentShift = "S3";
+    SLOTS = generateSlots("S3");
     bookings = {};
     bookingHistory = [];
     ghSHA = "";
     saveLocal();
-    schedulePush();
-    renderSlots();
+    sSet("bst_hist_S3_" + todayKey(), "[]");
+    pushBookings();
+
+    // Reset S1
+    currentShift = "S1";
+    SLOTS = generateSlots("S1");
+    bookings = {};
+    bookingHistory = [];
+    ghSHA = "";
+    saveLocal();
+    sSet("bst_hist_S1_" + todayKey(), "[]");
+    pushBookings().then(function() {
+        // Restore to S3 (default view)
+        currentShift = "S3";
+        SLOTS = generateSlots("S3");
+        loadLocal();
+        loadHistory();
+        renderSlots();
+    });
+
     showToast("All breaks reset for both shifts.");
 }
 
