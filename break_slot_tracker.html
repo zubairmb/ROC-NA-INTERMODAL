@@ -194,7 +194,7 @@ function generateSlots(shift) {
             if (h >= 19 && h < 20) { m += 15; if (m >= 60) { m -= 60; h++; } continue; }
         }
 
-        slots.push({ id: shift + "_" + h + "_" + m, label: fmtTime(h, m) + " – " + fmtTime(eH, eM), capacity: cap });
+        slots.push({ id: shift + "_" + h + "_" + m, label: fmtTime(h, m) + " - " + fmtTime(eH, eM), capacity: cap });
         m += 15;
         if (m >= 60) { m -= 60; h++; }
     }
