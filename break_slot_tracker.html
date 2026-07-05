@@ -685,24 +685,46 @@ function resetShift(shift) {
     if (ADMIN_USERS.indexOf(currentUser) === -1) { showToast("Access denied.", true); return; }
     if (!confirm("Reset ALL break selections for " + SHIFTS[shift].name + " today?")) return;
 
-    // Switch to target shift, clear, and push immediately
+    // Stop polling so it doesn't overwrite our reset
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+
     var prevShift = currentShift;
     currentShift = shift;
     SLOTS = generateSlots(shift);
     bookings = {};
     bookingHistory = [];
-    ghSHA = "";
     saveLocal();
     sSet("bst_hist_" + shift + "_" + todayKey(), "[]");
 
-    // Push empty state immediately (not debounced)
-    pushBookings().then(function() {
-        // Switch back to whatever shift we were viewing
+    // Fetch latest SHA first, then push empty
+    var token = getToken();
+    var url = GH_API + ghFile();
+    fetch(url, { headers: { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" }, cache: "no-store" })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(data) {
+        ghSHA = data ? data.sha : "";
+        var payload = JSON.stringify({ bookings: {}, history: [] }, null, 2);
+        var content = btoa(unescape(encodeURIComponent(payload)));
+        var body = { message: "Reset " + shift, content: content };
+        if (ghSHA) body.sha = ghSHA;
+        return fetch(url, { method: "PUT", headers: { "Authorization": "token " + token, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data && data.content) ghSHA = data.content.sha;
+        // Restore view
         currentShift = prevShift;
         SLOTS = generateSlots(prevShift);
-        loadLocal();
-        loadHistory();
+        if (prevShift === shift) { bookings = {}; bookingHistory = []; }
+        else { loadLocal(); loadHistory(); }
         renderSlots();
+        // Resume polling after 5 seconds
+        setTimeout(startPolling, 5000);
+    })
+    .catch(function() {
+        currentShift = prevShift; SLOTS = generateSlots(prevShift);
+        loadLocal(); renderSlots(); startPolling();
+        showToast("Reset push failed. Try again.", true);
     });
 
     showToast(SHIFTS[shift].name + " breaks reset.");
@@ -712,32 +734,36 @@ function resetAll() {
     if (ADMIN_USERS.indexOf(currentUser) === -1) { showToast("Access denied.", true); return; }
     if (!confirm("Reset ALL break selections for BOTH shifts today? This cannot be undone.")) return;
 
-    // Reset S3
-    currentShift = "S3";
-    SLOTS = generateSlots("S3");
-    bookings = {};
-    bookingHistory = [];
-    ghSHA = "";
-    saveLocal();
-    sSet("bst_hist_S3_" + todayKey(), "[]");
-    pushBookings();
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    var token = getToken();
 
-    // Reset S1
-    currentShift = "S1";
-    SLOTS = generateSlots("S1");
-    bookings = {};
-    bookingHistory = [];
-    ghSHA = "";
-    saveLocal();
+    function resetOneShift(shift) {
+        var file = "breaks_" + shift + "_" + todayKey() + ".json";
+        var url = GH_API + file;
+        return fetch(url, { headers: { "Authorization": "token " + token, "Accept": "application/vnd.github.v3+json" }, cache: "no-store" })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+            var sha = data ? data.sha : "";
+            var payload = JSON.stringify({ bookings: {}, history: [] }, null, 2);
+            var content = btoa(unescape(encodeURIComponent(payload)));
+            var body = { message: "Reset " + shift, content: content };
+            if (sha) body.sha = sha;
+            return fetch(url, { method: "PUT", headers: { "Authorization": "token " + token, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+        });
+    }
+
+    // Clear local
+    sSet("bst_S1_" + todayKey(), "{}");
+    sSet("bst_S3_" + todayKey(), "{}");
     sSet("bst_hist_S1_" + todayKey(), "[]");
-    pushBookings().then(function() {
-        // Restore to S3 (default view)
-        currentShift = "S3";
-        SLOTS = generateSlots("S3");
-        loadLocal();
-        loadHistory();
-        renderSlots();
-    });
+    sSet("bst_hist_S3_" + todayKey(), "[]");
+    bookings = {}; bookingHistory = []; ghSHA = "";
+    renderSlots();
+
+    // Push both to GitHub
+    Promise.all([resetOneShift("S1"), resetOneShift("S3")])
+    .then(function() { setTimeout(startPolling, 5000); })
+    .catch(function() { setTimeout(startPolling, 5000); showToast("Reset push failed for one shift.", true); });
 
     showToast("All breaks reset for both shifts.");
 }
