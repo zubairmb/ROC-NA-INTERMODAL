@@ -311,10 +311,12 @@ function pushBookings(retry) {
     .then(function(data) {
         if (data && data.content) ghSHA = data.content.sha;
         isBusy = false;
+        setStatus("connected", "&#10003; Synced — last push: " + new Date().toLocaleTimeString("en-IN"));
     })
     .catch(function(err) {
         isBusy = false;
         console.warn("[BST] Push failed:", err.message);
+        setStatus("error", "&#9888; Push failed: " + err.message);
     });
 }
 
