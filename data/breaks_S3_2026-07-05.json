@@ -1,1 +1,14 @@
-{"bookings":{"test_slot":["testuser"]},"history":[{"user":"testuser","slotLabel":"Test","bookedAt":"now"}]}
+{
+  "bookings": {
+    "test_slot": [
+      "testuser"
+    ]
+  },
+  "history": [
+    {
+      "user": "testuser",
+      "slotLabel": "Test",
+      "bookedAt": "now"
+    }
+  ]
+}
