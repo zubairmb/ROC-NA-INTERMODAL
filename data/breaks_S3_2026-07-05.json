@@ -1,1 +1,4 @@
-{"bookings":{"S3_11_45":["sainvspk","zabimd"],"S3_9_15":["sainvspk"],"S3_9_30":["sainvspk"],"S3_6_45":["sainvspk"],"S3_8_15":["nikired"],"S3_8_30":["nikired"],"S3_6_15":["nikired"]},"history":[{"user":"sainvspk","slotLabel":"11:45 AM - 12:00 PM","bookedAt":"5/7/2026, 4:17:00 pm"},{"user":"sainvspk","slotLabel":"9:15 AM - 9:30 AM","bookedAt":"5/7/2026, 4:17:02 pm"},{"user":"sainvspk","slotLabel":"9:30 AM - 9:45 AM","bookedAt":"5/7/2026, 4:17:03 pm"},{"user":"sainvspk","slotLabel":"6:45 AM - 7:00 AM","bookedAt":"5/7/2026, 4:17:05 pm"},{"user":"zabimd","slotLabel":"11:45 AM - 12:00 PM","bookedAt":"5/7/2026, 4:17:26 pm"},{"user":"nikired","slotLabel":"8:15 AM - 8:30 AM","bookedAt":"5/7/2026, 4:22:39 pm"},{"user":"nikired","slotLabel":"8:30 AM - 8:45 AM","bookedAt":"5/7/2026, 4:22:40 pm"},{"user":"nikired","slotLabel":"6:15 AM - 6:30 AM","bookedAt":"5/7/2026, 4:22:48 pm"}]}
+{
+  "bookings": {},
+  "history": []
+}
