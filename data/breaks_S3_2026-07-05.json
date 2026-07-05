@@ -2,6 +2,9 @@
   "bookings": {
     "test_slot": [
       "testuser"
+    ],
+    "S3_7_45": [
+      "zubairmb"
     ]
   },
   "history": [
@@ -9,6 +12,11 @@
       "user": "testuser",
       "slotLabel": "Test",
       "bookedAt": "now"
+    },
+    {
+      "user": "zubairmb",
+      "slotLabel": "7:45 AM – 8:00 AM",
+      "bookedAt": "5/7/2026, 2:42:11 pm"
     }
   ]
 }
