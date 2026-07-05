@@ -11,6 +11,9 @@
     ],
     "S1_17_30": [
       "zubairmb"
+    ],
+    "S1_20_0": [
+      "mehaseeb"
     ]
   },
   "history": [
@@ -58,6 +61,11 @@
       "user": "zubairmb",
       "slotLabel": "5:30 PM â 5:45 PM",
       "bookedAt": "5/7/2026, 2:34:04 pm"
+    },
+    {
+      "user": "mehaseeb",
+      "slotLabel": "8:00 PM – 8:15 PM",
+      "bookedAt": "5/7/2026, 2:34:23 pm"
     }
   ]
 }
