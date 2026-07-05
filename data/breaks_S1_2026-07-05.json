@@ -1,0 +1,30 @@
+{
+  "bookings": {},
+  "history": [
+    {
+      "user": "testuser",
+      "slotLabel": "Test",
+      "bookedAt": "now"
+    },
+    {
+      "user": "zubairmb",
+      "slotLabel": "3:45 PM – 4:00 PM",
+      "bookedAt": "5/7/2026, 2:33:18 pm"
+    },
+    {
+      "user": "zubairmb",
+      "slotLabel": "4:00 PM – 4:15 PM",
+      "bookedAt": "5/7/2026, 2:33:19 pm"
+    },
+    {
+      "user": "zubairmb",
+      "slotLabel": "4:15 PM – 4:30 PM",
+      "bookedAt": "5/7/2026, 2:33:19 pm"
+    },
+    {
+      "user": "zubairmb",
+      "slotLabel": "5:30 PM – 5:45 PM",
+      "bookedAt": "5/7/2026, 2:33:20 pm"
+    }
+  ]
+}
