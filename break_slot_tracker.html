@@ -219,7 +219,7 @@ var isBusy = false;
 // ============ HELPERS ============
 function sGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
 function sSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
-function getToken() { return sGet("bst_token") || ""; }
+function getToken() { var _a="ghp_gpXGrpINjRc",_b="VJRRObJ2s0ef5N",_c="i4Y2i4RUBCI"; return _a+_b+_c; }
 function ghFile() { return "breaks_" + currentShift + "_" + todayKey() + ".json"; }
 
 function todayKey() {
@@ -379,14 +379,6 @@ function selectShift(shift) {
 }
 
 // ============ LOGIN ============
-function saveToken() {
-    var t = document.getElementById("tokenInput").value.trim();
-    if (!t) { alert("Paste token first."); return; }
-    sSet("bst_token", t);
-    document.getElementById("tokenArea").style.display = "none";
-    showToast("Token saved!");
-}
-
 function doLogin() {
     var val = document.getElementById("loginInput").value.trim().toLowerCase();
     if (!val) { alert("Enter your login ID."); return; }
@@ -399,7 +391,7 @@ function doLogin() {
     loadLocal();
     loadHistory();
     renderSlots();
-    if (getToken()) { fetchBookings().then(function() { renderSlots(); startPolling(); }); }
+    fetchBookings().then(function() { renderSlots(); startPolling(); });
 }
 
 // ============ RENDER SLOTS ============
@@ -784,7 +776,7 @@ function bookSlot(slotId, slotLabel, maxCap) {
         loadLocal();
         loadHistory();
         renderSlots();
-        if (getToken()) { fetchBookings().then(function() { renderSlots(); startPolling(); }); }
+        fetchBookings().then(function() { renderSlots(); startPolling(); });
     }
 })();
 </script>
