@@ -1,1 +1,1 @@
-{"bookings":{"S3_5_45":["mahprate"]},"history":[{"user":"mahprate","slotLabel":"5:45 AM - 6:00 AM","bookedAt":"10/7/2026, 4:32:15 am"}]}
+{"bookings":{"S3_5_45":["mahprate"],"S3_11_45":["mahprate"],"S3_11_30":["mahprate"]},"history":[{"user":"mahprate","slotLabel":"5:45 AM - 6:00 AM","bookedAt":"10/7/2026, 4:32:15 am"},{"user":"mahprate","slotLabel":"11:45 AM - 12:00 PM","bookedAt":"10/7/2026, 4:32:18 am"},{"user":"mahprate","slotLabel":"11:30 AM - 11:45 AM","bookedAt":"10/7/2026, 4:32:19 am"}]}
